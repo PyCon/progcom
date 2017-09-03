@@ -12,6 +12,7 @@ import bleach
 import markdown2 as markdown
 import dateutil.parser
 from raven.contrib.flask import Sentry
+from werkzeug.routing import SubPath
 
 
 import logic as l
@@ -28,6 +29,8 @@ app.register_blueprint(bp_admin, url_prefix='/admin')
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app)
     print 'Sentry'
+
+app.url_map._rules = SubPath(app.config['APPLICATION_ROOT'], app.url_map._rules)
 
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
 app.config.THIS_IS_BATCH = THIS_IS_BATCH
