@@ -21,6 +21,8 @@ from bp.admin import bp as bp_admin
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
+app.config["APPLICATION_ROOT"] = "/progcom"
+
 app.register_blueprint(bp_admin, url_prefix='/admin')
 
 if 'SENTRY_DSN' in os.environ:
