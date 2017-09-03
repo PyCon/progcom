@@ -8,7 +8,7 @@ https://mail.python.org/mailman/listinfo/pycon-pc
 Before reviewing proposals, please read http://www.njl.us/essays/pycon-process/.
 It explains the screening criteria for the first stage of review in greater detail.
 
-When you're ready to get started, please log in at {{ url_for('pick') }}.
+When you're ready to get started, please log in at {{ url }}.
 
 At that website you will see a talk proposal, chosen randomly from the pool of
 proposals that have the least reviews so far. Please review it based on the six
@@ -23,7 +23,7 @@ keep track of proposals that change after you vote on them, and allow you to go 
 and reevaluate them if necessary.
 
 Right now we are in the screening stage of talk proposal evaluation. Later stages
-of review will also occur on {{ url_for('pick') }}, but we'll describe how those
+of review will also occur on {{ url }}, but we'll describe how those
 will work in a future mailing list message.
 
 We talk about proposals on a slack channel; you should receive an invite to the

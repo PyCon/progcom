@@ -814,6 +814,7 @@ def test_login_string(s):
 def email_approved(id):
     user = get_user(id)
 
+    url = 'http://{}/progcom'.format(_WEB_HOST)
     msg = {
         "personalizations": [
             {
@@ -829,7 +830,7 @@ def email_approved(id):
         "content": [
             {
                 "type": "text/plain",
-                "value": _JINJA.get_template('email/welcome_user.txt').render(),
+                "value": _JINJA.get_template('email/welcome_user.txt').render(url=url),
             }
         ]
     }
