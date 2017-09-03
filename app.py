@@ -81,21 +81,21 @@ def security_check():
         return redirect(url_for('login'))
 
     path = request.path
-    if (request.user and path.startswith('/admin') 
+    if (request.user and path.startswith('/progcom/admin')
             and request.user.email not in _ADMIN_EMAILS):
         abort(403)
 
-    if path.startswith('/screening') and THIS_IS_BATCH:
+    if path.startswith('/progcom/screening') and THIS_IS_BATCH:
         abort(403)
 
-    if path.startswith('/batch') and not THIS_IS_BATCH:
+    if path.startswith('/progcom/batch') and not THIS_IS_BATCH:
         if request.user and request.user.email not in _ADMIN_EMAILS:
             abort(403)
 
     if request.user:
         return
 
-    safe_prefixes = ('/static', '/user', '/feedback', '/confirmation')
+    safe_prefixes = ('/progcom/static', '/progcom/user', '/progcom/feedback', '/progcom/confirmation')
     for prefix in safe_prefixes:
         if path.startswith(prefix):
             return
@@ -118,7 +118,7 @@ def login_post():
         flash('You have not yet been approved.')
         return redirect(url_for('login'))
     session['userid'] = uid
-    return redirect('/')
+    return redirect('/progcom/')
 
 @app.route('/progcom/user/new/')
 def new_user():
@@ -176,7 +176,7 @@ def reset_password():
 def reset_password_post():
     l.change_pw(request.user.id, request.values.get('pw'))
     flash('Password changed')
-    return redirect('/')
+    return redirect('/progcom/')
 
 """
 User State
