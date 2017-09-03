@@ -766,6 +766,7 @@ Emails
 _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 _LOGIN_EMAIL_ITSD = itsdangerous.URLSafeTimedSerializer(os.environ['ITSD_KEY'],
                                                 salt='loginemail')
+_EMAIL_FROM = os.environ['EMAIL_FROM']
 
 def send_login_email(email):
     q = 'SELECT id, email FROM users WHERE lower(email) = lower(%s)'
@@ -776,7 +777,7 @@ def send_login_email(email):
 
     body = _JINJA.get_template('email/login_email.txt')
     key = _LOGIN_EMAIL_ITSD.dumps(user.id)
-    url = 'http://{}/user/login/{}/'.format(_WEB_HOST, key)
+    url = 'http://{}/progcom/user/login/{}/'.format(_WEB_HOST, key)
     body = body.render(url=url)
 
     msg = {
@@ -787,8 +788,8 @@ def send_login_email(email):
             }
         ],
         "from": {
-            "email": "njl@njl.us",
-            "name": "Ned Jackson Lovely"
+            "email": _EMAIL_FROM,
+            "name": "PyCon Progamming Committee"
         },
         "content": [
             {
@@ -822,8 +823,8 @@ def email_approved(id):
             }
         ],
         "from": {
-            "email": "njl@njl.us",
-            "name": "Ned Jackson Lovely"
+            "email": _EMAIL_FROM,
+            "name": "PyCon Progamming Committee"
         },
         "content": [
             {
@@ -847,7 +848,7 @@ def email_new_user_pending(email, name):
             }
         ],
         "from": {
-            "email": "njl@njl.us",
+            "email": _EMAIL_FROM,
             "name": "PyCon Program Committee Robot"
         },
         "content": [
@@ -876,7 +877,7 @@ def send_weekly_update():
             }
         ],
         "from": {
-            "email": "njl@njl.us",
+            "email": _EMAIL_FROM,
             "name": "PyCon Program Committee Robot"
         },
         "content": [
@@ -1072,8 +1073,8 @@ def send_emails():
                         }
                     ],
                     "from": {
-                        "email": "njl@njl.us",
-                        "name": "Ned Jackson Lovely"
+                        "email": _EMAIL_FROM,
+                        "name": "PyCon Progamming Committee"
                     },
                     "content": [
                         {
@@ -1100,8 +1101,8 @@ def send_emails():
                     }
                 ],
                 "from": {
-                    "email": "njl@njl.us",
-                    "name": "Ned Jackson Lovely"
+                    "email": _EMAIL_FROM,
+                    "name": "PyCon Progamming Committee"
                 },
                 "content": [
                     {
