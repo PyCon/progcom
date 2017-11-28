@@ -1,10 +1,10 @@
 Dear {{name}},
 
-Thank you very much for your PyCon 2017 talk proposal,
+Thank you very much for your PyCon 2018 talk proposal,
 "{{title}}".
 
 Unfortunately, your talk was not one of the ones selected to appear at
-PyCon 2017.
+PyCon 2018.
 
 Each year brings more talk submissions than the year before, and this
 year was no exception. Both the quantity and the quality of proposals
@@ -27,10 +27,10 @@ Many subjects that aren't good fits for formal, scheduled talks are
 excellent subjects for open spaces! If you have a passion for your topic,
 then scheduling and hosting an open space is a great way to connect with
 others who share your interest. You can learn more about open spaces on
-the PyCon website, https://us.pycon.org/2017/events/open-spaces/
+the PyCon website, https://us.pycon.org/2018/events/open-spaces/
 
 If you plan to come, you should register at
-https://us.pycon.org/2017/registration/ as soon as possible. We have
+https://us.pycon.org/2018/registration/ as soon as possible. We have
 a limited number of tickets, and we expect to sell out. Waiting to buy
 tickets means you might not be able to come!
 
@@ -47,5 +47,5 @@ I hope to see you in Portland!
 
 
 Ned Jackson Lovely
-Program Chair, PyCon 2017
+Program Chair, PyCon 2018
 njl@njl.us
