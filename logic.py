@@ -767,6 +767,7 @@ _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 _LOGIN_EMAIL_ITSD = itsdangerous.URLSafeTimedSerializer(os.environ['ITSD_KEY'],
                                                 salt='loginemail')
 _EMAIL_FROM = os.environ['EMAIL_FROM']
+_UPDATE_EMAILS = set(json.loads(os.environ['UPDATE_EMAILS']))
 
 def send_login_email(email):
     q = 'SELECT id, email FROM users WHERE lower(email) = lower(%s)'
@@ -875,7 +876,7 @@ def send_weekly_update():
     msg = {
         "personalizations": [
             {
-                "to": [{"email": "pycon-pc@python.org"}],
+                "to": [{"email": x} for x in _UPDATE_EMAILS],
                 "subject": 'Weekly Program Committee Status',
             }
         ],
