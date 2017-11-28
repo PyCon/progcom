@@ -839,7 +839,8 @@ def email_approved(id):
 
 def email_new_user_pending(email, name):
     body = _JINJA.get_template('email/new_user_pending.txt').render(name=name,
-                                                            email=email)
+                                                                    email=email,
+                                                                    web_host=_WEB_HOST,)
 
     msg = {
         "personalizations": [
@@ -865,10 +866,11 @@ def email_new_user_pending(email, name):
 def send_weekly_update():
     body = _JINJA.get_template('email/weekly_email.txt')
     body = body.render(new_proposal_count=added_last_week(),
-                        updated_proposal_count=updated_last_week(),
-                        votes_last_week=votes_last_week(),
-                        active_discussions=active_discussions(),
-                        screening_progress=screening_progress())
+                       updated_proposal_count=updated_last_week(),
+                       votes_last_week=votes_last_week(),
+                       active_discussions=active_discussions(),
+                       screening_progress=screening_progress(),
+                       web_host=_WEB_HOST,)
 
     msg = {
         "personalizations": [
