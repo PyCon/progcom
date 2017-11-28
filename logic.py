@@ -36,7 +36,7 @@ def l(key, **data):
 """
 Some DB wrapper stuff
 """
-_e = create_engine(os.environ['PSQL_CONNECTION_STRING'])
+_e = create_engine(os.environ['DATABASE_URL'])
 
 __TUPLE_CACHE = {}
 def build_tuple(keys):
@@ -705,8 +705,8 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         full_proposal = get_proposal(proposal)
         email = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
-            url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
-            edit_url = 'https://us.pycon.org/2018/proposals/{}/'.format(proposal)
+            url = 'https://{}/feedback/{}'.format(_WEB_HOST, key)
+            edit_url = 'httpss://us.pycon.org/2018/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body, 
                                 url=url, edit_url=edit_url) 
             msg = {
@@ -767,6 +767,7 @@ _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 _LOGIN_EMAIL_ITSD = itsdangerous.URLSafeTimedSerializer(os.environ['ITSD_KEY'],
                                                 salt='loginemail')
 _EMAIL_FROM = os.environ['EMAIL_FROM']
+_UPDATE_EMAILS = set(json.loads(os.environ['UPDATE_EMAILS']))
 
 def send_login_email(email):
     q = 'SELECT id, email FROM users WHERE lower(email) = lower(%s)'
@@ -777,7 +778,7 @@ def send_login_email(email):
 
     body = _JINJA.get_template('email/login_email.txt')
     key = _LOGIN_EMAIL_ITSD.dumps(user.id)
-    url = 'http://{}/progcom/user/login/{}/'.format(_WEB_HOST, key)
+    url = 'https://{}/user/login/{}/'.format(_WEB_HOST, key)
     body = body.render(url=url)
 
     msg = {
@@ -814,7 +815,7 @@ def test_login_string(s):
 def email_approved(id):
     user = get_user(id)
 
-    url = 'http://{}/progcom'.format(_WEB_HOST)
+    url = 'https://{}'.format(_WEB_HOST)
     msg = {
         "personalizations": [
             {
@@ -839,7 +840,8 @@ def email_approved(id):
 
 def email_new_user_pending(email, name):
     body = _JINJA.get_template('email/new_user_pending.txt').render(name=name,
-                                                            email=email)
+                                                                    email=email,
+                                                                    web_host=_WEB_HOST,)
 
     msg = {
         "personalizations": [
@@ -863,17 +865,20 @@ def email_new_user_pending(email, name):
     _SENDGRID.client.mail.send.post(request_body=msg)
  
 def send_weekly_update():
+    if datetime.datetime.now().isoweekday() != 2:
+        return
     body = _JINJA.get_template('email/weekly_email.txt')
     body = body.render(new_proposal_count=added_last_week(),
-                        updated_proposal_count=updated_last_week(),
-                        votes_last_week=votes_last_week(),
-                        active_discussions=active_discussions(),
-                        screening_progress=screening_progress())
+                       updated_proposal_count=updated_last_week(),
+                       votes_last_week=votes_last_week(),
+                       active_discussions=active_discussions(),
+                       screening_progress=screening_progress(),
+                       web_host=_WEB_HOST,)
 
     msg = {
         "personalizations": [
             {
-                "to": [{"email": "pycon-pc@python.org"}],
+                "to": [{"email": x} for x in _UPDATE_EMAILS],
                 "subject": 'Weekly Program Committee Status',
             }
         ],
@@ -1092,7 +1097,7 @@ def send_emails():
                     VALUES (%s, %s) RETURNING id'''
             id = scalar(q, p.id, email)
             key = _CONFIRMATION_ITSD.dumps(id)
-            url = 'http://{}/confirmation/{}/'.format(_WEB_HOST, key)
+            url = 'https://{}/confirmation/{}/'.format(_WEB_HOST, key)
             text = accepted.render(name=name, title=p.data['title'], url=url)
             msg = {
                 "personalizations": [

@@ -12,7 +12,7 @@ Our coverage currently looks like this:
 
 The five busiest discussions are:{%for ad in active_discussions[:5] %}
 {{ad.count}} messages about {{ad.title}}
-http://progcom.njl.us/screening/{{ad.id}}/{% endfor %}
+https://{{web_host}}/screening/{{ad.id}}/{% endfor %}
 
 Regards,
 

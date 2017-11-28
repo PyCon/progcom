@@ -21,7 +21,7 @@ from bp.admin import bp as bp_admin
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-app.register_blueprint(bp_admin, url_prefix='/progcom/admin')
+app.register_blueprint(bp_admin, url_prefix='/admin')
 
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app)
@@ -81,32 +81,32 @@ def security_check():
         return redirect(url_for('login'))
 
     path = request.path
-    if (request.user and path.startswith('/progcom/admin')
+    if (request.user and path.startswith('/admin')
             and request.user.email not in _ADMIN_EMAILS):
         abort(403)
 
-    if path.startswith('/progcom/screening') and THIS_IS_BATCH:
+    if path.startswith('/screening') and THIS_IS_BATCH:
         abort(403)
 
-    if path.startswith('/progcom/batch') and not THIS_IS_BATCH:
+    if path.startswith('/batch') and not THIS_IS_BATCH:
         if request.user and request.user.email not in _ADMIN_EMAILS:
             abort(403)
 
     if request.user:
         return
 
-    safe_prefixes = ('/progcom/static', '/progcom/user', '/progcom/feedback', '/progcom/confirmation')
+    safe_prefixes = ('/static', '/user', '/feedback', '/confirmation')
     for prefix in safe_prefixes:
         if path.startswith(prefix):
             return
 
     return redirect(url_for('login'))
 
-@app.route('/progcom/user/login/')
+@app.route('/user/login/')
 def login():
     return render_template('user/login.html')
 
-@app.route('/progcom/user/login/', methods=['POST'])
+@app.route('/user/login/', methods=['POST'])
 def login_post():
     uid = l.check_pw(request.values.get('email'),
                         request.values.get('pw'))
@@ -118,13 +118,13 @@ def login_post():
         flash('You have not yet been approved.')
         return redirect(url_for('login'))
     session['userid'] = uid
-    return redirect('/progcom/')
+    return redirect('/')
 
-@app.route('/progcom/user/new/')
+@app.route('/user/new/')
 def new_user():
     return render_template('user/new_user.html')
 
-@app.route('/progcom/user/new/', methods=['POST'])
+@app.route('/user/new/', methods=['POST'])
 def new_user_post():
     email = request.values.get('email')
     name = request.values.get('name')
@@ -140,16 +140,16 @@ def new_user_post():
     flash('You will be able to log in after your account is approved!')
     return redirect(url_for('login'))
 
-@app.route('/progcom/user/logout/')
+@app.route('/user/logout/')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/progcom/user/email_login/')
+@app.route('/user/email_login/')
 def request_reset():
     return render_template('user/request_reset.html')
 
-@app.route('/progcom/user/email_login/', methods=['POST'])
+@app.route('/user/email_login/', methods=['POST'])
 def request_reset_post():
     if l.send_login_email(request.values.get('email')):
         flash('Reset sent')
@@ -157,7 +157,7 @@ def request_reset_post():
         flash('Reset failed; perhaps a bad email address?')
     return redirect(url_for('request_reset'))
 
-@app.route('/progcom/user/login/<key>/')
+@app.route('/user/login/<key>/')
 def view_reset_key(key):
     uid = l.test_login_string(key)
     if not uid:
@@ -167,21 +167,21 @@ def view_reset_key(key):
     flash('Logged in!')
     return redirect(url_for('reset_password'))
 
-@app.route('/progcom/me/change_password/')
+@app.route('/me/change_password/')
 def reset_password():
     return render_template('user/reset_password.html')
 
 
-@app.route('/progcom/me/change_password/', methods=['POST'])
+@app.route('/me/change_password/', methods=['POST'])
 def reset_password_post():
     l.change_pw(request.user.id, request.values.get('pw'))
     flash('Password changed')
-    return redirect('/progcom/')
+    return redirect('/')
 
 """
 User State
 """
-@app.route('/progcom/votes/')
+@app.route('/votes/')
 def show_votes():
     votes = l.get_my_votes(request.user.id)
     votes = [x._replace(updated_on=l._js_time(x.updated_on)) for x in votes]
@@ -189,14 +189,14 @@ def show_votes():
     return render_template('my_votes.html', votes=votes, percent=percent,
                             standards = l.get_standards())
 
-@app.route('/progcom/unread/')
+@app.route('/unread/')
 def show_unread():
     return render_template('unread.html', unread=l.get_unread(request.user.id)) 
 
 """
 Batch Actions
 """
-@app.route('/progcom/batch/')
+@app.route('/batch/')
 def batch_splash_page():
     groups = [x._asdict() for x in l.list_groups(request.user.id)]
     unread = l.get_unread_batches(request.user.id)
@@ -207,7 +207,7 @@ def batch_splash_page():
     percent = int( 100.0*sum(1.0 for x in groups if x['voted']) / len(groups))
     return render_template('batch/batch.html', groups=groups, percent=percent)
 
-@app.route('/progcom/batch/full/<int:id>/')
+@app.route('/batch/full/<int:id>/')
 def view_single_proposals(id):
     proposal = l.get_proposal(id)
     if request.user.email in [x.email for x in proposal.authors]:
@@ -215,12 +215,12 @@ def view_single_proposals(id):
     return render_template('batch/single_proposal.html', proposal=proposal,
                             discussion=l.get_discussion(id))
 
-@app.route('/progcom/batch/full/')
+@app.route('/batch/full/')
 def full_list():
     return render_template('batch/full_list.html',
             proposals=l.full_proposal_list(request.user.email))
 
-@app.route('/progcom/batch/<int:id>/')
+@app.route('/batch/<int:id>/')
 def batch_view(id):
     l.l('batch_view', uid=request.user.id, gid=id)
     group = l.get_group(id)
@@ -252,7 +252,7 @@ def batch_view(id):
                             all_votes=votes,
                             vote = vote._asdict() if vote else None)
 
-@app.route('/progcom/batch/<int:id>/vote/', methods=['POST'])
+@app.route('/batch/<int:id>/vote/', methods=['POST'])
 def batch_vote(id):
     group = l.get_group(id)
     if request.user.email in group.author_emails or group.locked:
@@ -263,7 +263,7 @@ def batch_vote(id):
     l.vote_group(id, request.user.id, accept)
     return redirect(url_for('batch_view', id=id))
 
-@app.route('/progcom/batch/<int:id>/comment/', methods=['POST'])
+@app.route('/batch/<int:id>/comment/', methods=['POST'])
 def batch_discussion(id):
     group = l.get_group(id)
     if request.user.email in group.author_emails or group.locked:
@@ -274,7 +274,7 @@ def batch_discussion(id):
     return render_template('batch/batch_discussion_snippet.html',
                             msgs=l.get_batch_messages(id))
 
-@app.route('/progcom/batch/nominations/')
+@app.route('/batch/nominations/')
 def my_nominations():
     return render_template('batch/my_pycon.html',
                             proposals=l.get_my_pycon(request.user.id))
@@ -282,12 +282,12 @@ def my_nominations():
 """
 Screening Actions
 """
-@app.route('/progcom/activity_buttons/')
+@app.route('/activity_buttons/')
 def activity_buttons():
     return render_template('activity_button_fragment.html')
 
 
-@app.route('/progcom/screening/stats/')
+@app.route('/screening/stats/')
 def screening_stats():
     users = [x for x in l.list_users() if x.votes]
     users.sort(key=lambda x:-x.votes)
@@ -305,7 +305,7 @@ def screening_stats():
                             active_discussions=active_discussions,
                             votes_when=votes_when)
 
-@app.route('/progcom/screening/<int:id>/')
+@app.route('/screening/<int:id>/')
 def screening(id):
     l.l('screening_view', uid=request.user.id, id=id)
     proposal = l.get_proposal(id)
@@ -333,7 +333,7 @@ def screening(id):
                             unread=unread,
                             percent=percent)
 
-@app.route('/progcom/screening/<int:id>/vote/', methods=['POST'])
+@app.route('/screening/<int:id>/vote/', methods=['POST'])
 def vote(id):
     standards = l.get_standards()
     scores = {}
@@ -346,7 +346,7 @@ def vote(id):
                             votes = l.get_votes(id),
                             existing_vote=l.get_user_vote(request.user.id, id))
 
-@app.route('/progcom/screening/<int:id>/comment/', methods=['POST'])
+@app.route('/screening/<int:id>/comment/', methods=['POST'])
 def comment(id):
     comment = request.values.get('comment').strip()
     if comment:
@@ -355,7 +355,7 @@ def comment(id):
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
-@app.route('/progcom/screening/<int:id>/feedback/', methods=['POST'])
+@app.route('/screening/<int:id>/feedback/', methods=['POST'])
 def feedback(id):
     if CUTOFF_FEEDBACK:
         abort(404)
@@ -366,14 +366,14 @@ def feedback(id):
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
-@app.route('/progcom/screening/<int:id>/mark_read/', methods=['POST'])
+@app.route('/screening/<int:id>/mark_read/', methods=['POST'])
 def mark_read(id):
     l.mark_read(request.user.id, id)
     return render_template('discussion_snippet.html', 
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
-@app.route('/progcom/screening/<int:id>/mark_read/next/', methods=['POST'])
+@app.route('/screening/<int:id>/mark_read/next/', methods=['POST'])
 def mark_read_read_next(id):
     l.mark_read(request.user.id, id)
     unread = l.get_unread(request.user.id)
@@ -387,7 +387,7 @@ def mark_read_read_next(id):
 Author Feedback
 """
 
-@app.route('/progcom/feedback/<key>')
+@app.route('/feedback/<key>')
 def author_feedback(key):
     name, id = l.check_author_key(key)
     if not name:
@@ -397,7 +397,7 @@ def author_feedback(key):
                             proposal=proposal, messages=l.get_discussion(id))
 
 
-@app.route('/progcom/feedback/<key>', methods=['POST'])
+@app.route('/feedback/<key>', methods=['POST'])
 def author_post_feedback(key):
     if CUTOFF_FEEDBACK:
         abort(404)
@@ -416,7 +416,7 @@ def author_post_feedback(key):
 Observer View
 """
 
-@app.route('/progcom/schedule/')
+@app.route('/schedule/')
 def view_schedule():
     return render_template('admin/schedule.html', schedule=l.get_schedule(),
                                 talks=l.get_accepted(), read_only=True)
@@ -424,7 +424,7 @@ def view_schedule():
 """
 Confirmation
 """
-@app.route('/progcom/confirmation/<key>/')
+@app.route('/confirmation/<key>/')
 def confirmation(key):
     id = l.acknowledge_confirmation(key)
     if not id:
@@ -435,7 +435,7 @@ def confirmation(key):
 """
 Default Action
 """
-@app.route('/progcom/')
+@app.route('/')
 def pick():
     if THIS_IS_BATCH:
         return redirect(url_for('batch_splash_page'))
