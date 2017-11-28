@@ -36,7 +36,7 @@ def l(key, **data):
 """
 Some DB wrapper stuff
 """
-_e = create_engine(os.environ['PSQL_CONNECTION_STRING'])
+_e = create_engine(os.environ['DATABASE_URL'])
 
 __TUPLE_CACHE = {}
 def build_tuple(keys):
@@ -705,8 +705,8 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         full_proposal = get_proposal(proposal)
         email = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
-            url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
-            edit_url = 'https://us.pycon.org/2018/proposals/{}/'.format(proposal)
+            url = 'https://{}/feedback/{}'.format(_WEB_HOST, key)
+            edit_url = 'httpss://us.pycon.org/2018/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body, 
                                 url=url, edit_url=edit_url) 
             msg = {
@@ -777,7 +777,7 @@ def send_login_email(email):
 
     body = _JINJA.get_template('email/login_email.txt')
     key = _LOGIN_EMAIL_ITSD.dumps(user.id)
-    url = 'http://{}/progcom/user/login/{}/'.format(_WEB_HOST, key)
+    url = 'https://{}/user/login/{}/'.format(_WEB_HOST, key)
     body = body.render(url=url)
 
     msg = {
@@ -814,7 +814,7 @@ def test_login_string(s):
 def email_approved(id):
     user = get_user(id)
 
-    url = 'http://{}/progcom'.format(_WEB_HOST)
+    url = 'https://{}'.format(_WEB_HOST)
     msg = {
         "personalizations": [
             {
@@ -1092,7 +1092,7 @@ def send_emails():
                     VALUES (%s, %s) RETURNING id'''
             id = scalar(q, p.id, email)
             key = _CONFIRMATION_ITSD.dumps(id)
-            url = 'http://{}/confirmation/{}/'.format(_WEB_HOST, key)
+            url = 'https://{}/confirmation/{}/'.format(_WEB_HOST, key)
             text = accepted.render(name=name, title=p.data['title'], url=url)
             msg = {
                 "personalizations": [

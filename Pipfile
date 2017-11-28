@@ -1,0 +1,36 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "2.7"
+
+
+[dev-packages]
+
+
+
+[packages]
+
+Flask = "*"
+SQLAlchemy = "*"
+bcrypt = "*"
+"psycopg2" = "*"
+itsdangerous = "*"
+sendgrid = "*"
+bleach = "*"
+"markdown2" = "*"
+simplejson = "*"
+pandas = "*"
+gensim = "*"
+python-dateutil = "*"
+requests = {extras = ["security"]}
+pytz = "*"
+gevent = "*"
+pytest = "*"
+mock = "*"
+pytest-cov = "*"
+gunicorn = "*"
+raven = {extras = ["flask"]}
