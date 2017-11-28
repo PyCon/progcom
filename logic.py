@@ -865,6 +865,8 @@ def email_new_user_pending(email, name):
     _SENDGRID.client.mail.send.post(request_body=msg)
  
 def send_weekly_update():
+    if datetime.datetime.now().isoweekday() != 2:
+        return
     body = _JINJA.get_template('email/weekly_email.txt')
     body = body.render(new_proposal_count=added_last_week(),
                        updated_proposal_count=updated_last_week(),
