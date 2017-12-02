@@ -57,7 +57,7 @@ contact our registration team (pycon2018@cteusa.com).
 
 If you have any other questions, comments, or feedback, please feel
 free to contact me (jason+pcc@mailthemyers.com), or the conference chair,
-Ernest Durbin (REPLACE_ME@SOME_EMAIL.COM).
+Ernest Durbin (ernest@python.org).
 
 On behalf of the PyCon staff, I want to thank you for your submission.
 We're really looking forward to seeing you at the conference; PyCon 2018
