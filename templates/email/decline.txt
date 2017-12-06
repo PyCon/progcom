@@ -35,8 +35,8 @@ a limited number of tickets, and we expect to sell out. Waiting to buy
 tickets means you might not be able to come!
 
 If you have any other questions, comments, or feedback, please feel
-free to contact me (njl@njl.us), or the conference chair, Brandon Rhodes
-(pycon.brandon@gmail.com).
+free to contact me (jason+pcc@mailthemyers.com), or the conference chair,
+Ernest Dubin (ernest@python.org).
 
 On behalf of the PyCon staff, I want to thank you again for your
 submission. You made our job of picking talks very hard, and the
@@ -46,6 +46,6 @@ I hope to see you in Portland!
 
 
 
-Ned Jackson Lovely
+Jason Myers
 Program Chair, PyCon 2018
-njl@njl.us
+jason+pcc@mailthemyers.com

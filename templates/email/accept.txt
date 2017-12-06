@@ -56,8 +56,8 @@ If you need assistance with visas or immigration documents, please
 contact our registration team (pycon2018@cteusa.com).
 
 If you have any other questions, comments, or feedback, please feel
-free to contact me (njl@njl.us), or the conference chair, Brandon Rhodes
-(pycon.brandon@gmail.com).
+free to contact me (jason+pcc@mailthemyers.com), or the conference chair,
+Ernest Durbin (ernest@python.org).
 
 On behalf of the PyCon staff, I want to thank you for your submission.
 We're really looking forward to seeing you at the conference; PyCon 2018
@@ -67,6 +67,6 @@ speakers. We're thrilled that you're one of them.
 See you in Portland!
 
 
-Ned Jackson Lovely
+Jason Myers
 Program Chair, PyCon 2018
-njl@njl.us
+jason+pcc@mailthemyers.com
