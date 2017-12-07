@@ -67,12 +67,16 @@ def fetch_talk(id):
     return rv
 
 def main():
-    for id in fetch_ids():
+    existing_ids = l.get_all_proposal_ids()
+    new_ids = fetch_ids()
+    for id in new_ids:
         #print 'FETCHING {}'.format(id)
         proposal = fetch_talk(id)
         if proposal:
             l.add_proposal(proposal)
-
+    withdrawn = list(set(existing_ids).difference(set(new_ids)))
+    for id in withdrawn:
+        l.withdraw_proposal(id)
 
 raven_client = Client(os.environ['SENTRY_DSN'])
 if __name__ == '__main__':

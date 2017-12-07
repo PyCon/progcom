@@ -191,7 +191,7 @@ def add_proposal(data):
     if proposal.data == cleaned_data:
         return None
 
-    q = 'UPDATE proposals SET data=%s, data_history=%s, updated=now() WHERE id=%s'
+    q = 'UPDATE proposals SET withdrawn=FALSE, data=%s, data_history=%s, updated=now() WHERE id=%s'
     new_data = cleaned_data.copy()
     new_data['when'] = datetime.datetime.now().isoformat()
     data_history = proposal.data_history
@@ -199,6 +199,10 @@ def add_proposal(data):
     execute(q, (Json(cleaned_data), Json(data_history), data['id']))
 
     return data['id']
+
+def withdraw_proposal(id):
+    q = "UPDATE proposals SET withdrawn=TRUE WHERE id=%s"
+    execute(q, id)
 
 def get_vote_percentage(email, id):
     q = '''SELECT COUNT(*) FROM proposals WHERE NOT withdrawn
