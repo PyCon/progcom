@@ -294,7 +294,7 @@ def get_my_votes(uid):
             proposals.data->>'title' as title,
             proposals.updated AS proposal_updated
             FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
-            WHERE votes.voter=%s ORDER BY updated DESC'''
+            WHERE votes.voter=%s AND NOT proposals.withdrawn ORDER BY updated DESC'''
     return [_clean_vote(v) for v in fetchall(q, uid)]
 
 
