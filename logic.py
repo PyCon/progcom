@@ -212,7 +212,11 @@ def get_vote_percentage(email, id):
     total = scalar(q, email)
     q = 'SELECT COUNT(*) FROM votes WHERE voter=%s'
     votes = scalar(q, id)
-    return "%0.2f" % (100.0*votes/total)
+    try:
+        value = 100.0*votes/total
+    except ZeroDivisionError:
+        value = 0.0
+    return "%0.2f" % (value,)
 
 def get_all_proposal_ids():
     q = 'SELECT id FROM proposals'
