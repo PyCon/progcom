@@ -189,7 +189,7 @@ def add_proposal(data):
         return data['id']
 
     if proposal.data == cleaned_data:
-        q = 'UPDATE proposals SET withdrawn=FALSE, updated=now() WHERE id=%s'
+        q = 'UPDATE proposals SET withdrawn=FALSE, updated=now() WHERE id=%s AND withdrawn'
         execute(q, data['id'])
         return None
 
