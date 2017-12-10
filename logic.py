@@ -414,23 +414,21 @@ def updated_last_week():
 
 def votes_last_week():
     q = '''SELECT COUNT(*) AS total FROM votes
-            WHERE updated_on > current_date - interval '7 days'
-                    AND NOT proposals.widthdrawn'''
+            WHERE updated_on > current_date - interval '7 days' '''
     return scalar(q)
 
 def active_discussions():
     q = '''SELECT COUNT(d.id) as count, p.data->>'title' as title, p.id as id
             FROM discussion as d INNER JOIN proposals AS p ON (d.proposal=p.id)
             WHERE d.created > current_date - interval '7 days'
-                    AND NOT proposals.widthdrawn
+                    AND NOT p.widthdrawn
             GROUP BY title, p.id
             ORDER BY count DESC'''
     return [x for x in fetchall(q) if x.count > 2]
 
 def nomination_density():
     q = '''SELECT count(proposal) FROM votes
-            WHERE nominate=TRUE GROUP BY proposal
-                    AND NOT proposals.widthdrawn'''
+            WHERE nominate=TRUE GROUP BY proposal'''
     rv = [x for x in Counter([x.count for x in fetchall(q)]).items() ]
     rv.sort(key=lambda x:-x[0])
     return rv
@@ -451,7 +449,7 @@ def full_proposal_list(email):
             FROM proposals AS p
             LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
             WHERE NOT (%s = ANY(p.author_emails))
-                    AND NOT proposals.widthdrawn
+                    AND NOT p.widthdrawn
             ORDER BY p.id'''
     raw = [x._asdict() for x in fetchall(q, email)]
     batch = get_batch_coverage()
@@ -496,8 +494,8 @@ def vote_group(batchgroup, voter, accept):
 def raw_list_groups():
     rv = fetchall('''SELECT batchgroups.*,
         (SELECT COUNT(*) FROM proposals
-            WHERE proposals.batchgroup = batchgroups.id) AS talk_count
-                    AND NOT proposals.widthdrawn
+            WHERE proposals.batchgroup = batchgroups.id
+                AND NOT proposals.widthdrawn) AS talk_count
             FROM batchgroups
             ORDER BY lower(name)''')
     rv = [x._asdict() for x in rv]
@@ -524,8 +522,8 @@ def get_batch_stats():
             batchmap[vote.batchgroup][selection] += 1
 
     q = '''SELECT batchgroup as id, COUNT(id) as proposals FROM proposals
-            WHERE batchgroup IS NOT NULL GROUP BY batchgroup
-                    AND NOT proposals.widthdrawn'''
+            WHERE batchgroup IS NOT NULL AND NOT proposals.widthdrawn
+            GROUP BY batchgroup'''
     rv = [x._asdict() for x in fetchall(q)]
     for group in rv:
         id = group['id']
