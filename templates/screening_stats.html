@@ -57,7 +57,7 @@
             {% for user in users%}
             <tr><td>{{user.display_name}}</td>
                 <td>{{user.votes}}</td>
-                <td>{{"%.2f"|format(user.votes/(total_proposals-user.proposals_made)*100)}}</td>
+                <td>{{"%.2f"|format((user.votes + 0.001)/((total_proposals-user.proposals_made)*100+0.001))}}</td>
             </tr>
             {% endfor %}
             <tr><th>Total</th><th>{{total_votes}}</th><td></td></tr>
@@ -67,7 +67,7 @@
 
 {%endblock body%}
 {%block extracss%}
-<link rel="stylesheet" 
+<link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css">
 <style type="text/css">
 #votes-when svg {height:200px;}
