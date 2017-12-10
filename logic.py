@@ -380,8 +380,9 @@ def get_votes_by_day():
 def coverage_by_age():
     q = '''SELECT COUNT(*) as total,
             date_trunc('week', added_on) AS week,
-            vote_count FROM proposals GROUP BY week, vote_count
+            vote_count FROM proposals
             WHERE NOT proposals.withdrawn
+            GROUP BY week, vote_count
             ORDER BY vote_count ASC'''
     result = defaultdict(dict)
     for r in fetchall(q):
