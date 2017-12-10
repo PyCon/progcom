@@ -1,5 +1,5 @@
 from collections import namedtuple, defaultdict, Counter
-import os 
+import os
 import random
 import json
 import logging
@@ -31,7 +31,7 @@ def l(key, **data):
     data['key'] = key
     data['when'] = datetime.datetime.now().isoformat()+'Z'
     logger.info(json.dumps(data))
-    
+
 
 """
 Some DB wrapper stuff
@@ -88,7 +88,7 @@ def add_user(email, display_name, pw):
     except IntegrityError:
         l('add_user_dupe', email=email, display_name=display_name)
         return -1
-    return id 
+    return id
 
 def approve_user(id):
     q = 'UPDATE users SET approved_on=now() WHERE id=%s'
@@ -116,12 +116,12 @@ def get_user(id):
     if not id:
         return None
     q = '''SELECT id, email, display_name, approved_on IS NOT NULL AS approved,
-            EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1) 
+            EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1)
                 AS unread,
-            EXISTS (SELECT 1 FROM votes 
+            EXISTS (SELECT 1 FROM votes
                         INNER JOIN proposals ON (votes.proposal = proposals.id)
                         WHERE votes.voter=%s
-                                AND proposals.updated > votes.updated_on) 
+                                AND proposals.updated > votes.updated_on)
                 AS revisit
             FROM users WHERE id=%s'''
     return fetchone(q, id, id, id)
@@ -145,7 +145,7 @@ Proposal Management
 """
 def _clean_proposal(raw):
     authorsT = build_tuple(('name', 'email'))
-    raw['authors'] = tuple(authorsT(name, email) 
+    raw['authors'] = tuple(authorsT(name, email)
                             for name, email in zip(raw['author_names'],
                                                 raw['author_emails']))
     del raw['author_names']
@@ -235,7 +235,7 @@ def add_standard(s):
     return scalar(q, s)
 
 def _clean_vote(vote):
-    return vote._replace(scores={int(k):v for k,v in vote.scores.items()}) 
+    return vote._replace(scores={int(k):v for k,v in vote.scores.items()})
 
 def vote(voter, proposal, scores, nominate=False):
     l('vote', uid=voter, id=proposal, scores=scores, nominate=nominate)
@@ -278,7 +278,7 @@ def needs_votes(email, uid):
     q = '''SELECT id, vote_count FROM proposals
             WHERE NOT (lower(%s) = ANY(author_emails) )
             AND NOT (%s = ANY(voters))
-            AND NOT withdrawn 
+            AND NOT withdrawn
             ORDER BY vote_count ASC'''
     results = fetchall(q, email, uid)
     if not results:
@@ -312,7 +312,9 @@ def scored_proposals():
                     batchgroups.id as batch_id
             FROM votes
             INNER JOIN proposals ON (votes.proposal = proposals.id)
-            LEFT JOIN batchgroups ON (proposals.batchgroup = batchgroups.id)'''
+            LEFT JOIN batchgroups ON (proposals.batchgroup = batchgroups.id)
+            WHERE NOT proposals.withdrawn'''
+
     votes = fetchall(q)
     scores = defaultdict(list)
     nom_green = defaultdict(list)
@@ -356,6 +358,7 @@ def scored_proposals():
 def screening_progress():
     q = '''SELECT vote_count, COUNT(vote_count) as quantity
             FROM proposals GROUP BY vote_count
+            WHERE NOT proposals.withdrawn
             ORDER BY vote_count ASC'''
     return fetchall(q)
 
@@ -363,8 +366,9 @@ def _js_time(d):
     return int(time.mktime(d.timetuple()))*1000;
 
 def get_votes_by_day():
-    q = '''SELECT COUNT(*) as count, 
+    q = '''SELECT COUNT(*) as count,
             date_trunc('day', updated_on) AS day
+            WHERE NOT proposals.withdrawn
             FROM votes GROUP BY day'''
     results = {x.day.date().isoformat():x.count for x in fetchall(q)}
     full = pd.Series(results)
@@ -377,49 +381,55 @@ def coverage_by_age():
     q = '''SELECT COUNT(*) as total,
             date_trunc('week', added_on) AS week,
             vote_count FROM proposals GROUP BY week, vote_count
+            WHERE NOT proposals.withdrawn
             ORDER BY vote_count ASC'''
     result = defaultdict(dict)
     for r in fetchall(q):
         result[r.vote_count][r.week.date().isoformat()] = r.total
-    
+
     df = pd.DataFrame(result).fillna(0)
     df.index = pd.DatetimeIndex(df.index)
 
     result = {votes:series for votes, series in df.iteritems()}
     rv = []
     for key, series in result.iteritems():
-        rv.append({'key':key, 
+        rv.append({'key':key,
             'values': [{'week':_js_time(k), 'votes':v}
                         for k,v in series.iteritems()]})
     return rv
 
 def added_last_week():
-    q = '''SELECT COUNT(*) AS total FROM proposals 
-            WHERE added_on > current_date - interval '7 days' '''
+    q = '''SELECT COUNT(*) AS total FROM proposals
+            WHERE added_on > current_date - interval '7 days'
+                AND NOT proposals.widthdrawn'''
     return scalar(q)
 
 def updated_last_week():
     q = '''SELECT COUNT(*) AS total FROM proposals
             WHERE added_on < current_date - interval '7 days'
-                    AND updated > current_date - interval '7 days' '''
+                    AND updated > current_date - interval '7 days'
+                    AND NOT proposals.widthdrawn'''
     return scalar(q)
 
 def votes_last_week():
-    q = '''SELECT COUNT(*) AS total FROM votes 
-            WHERE updated_on > current_date - interval '7 days' '''
+    q = '''SELECT COUNT(*) AS total FROM votes
+            WHERE updated_on > current_date - interval '7 days'
+                    AND NOT proposals.widthdrawn'''
     return scalar(q)
 
 def active_discussions():
     q = '''SELECT COUNT(d.id) as count, p.data->>'title' as title, p.id as id
             FROM discussion as d INNER JOIN proposals AS p ON (d.proposal=p.id)
             WHERE d.created > current_date - interval '7 days'
+                    AND NOT proposals.widthdrawn
             GROUP BY title, p.id
             ORDER BY count DESC'''
     return [x for x in fetchall(q) if x.count > 2]
 
 def nomination_density():
-    q = '''SELECT count(proposal) FROM votes 
-            WHERE nominate=TRUE GROUP BY proposal'''
+    q = '''SELECT count(proposal) FROM votes
+            WHERE nominate=TRUE GROUP BY proposal
+                    AND NOT proposals.widthdrawn'''
     rv = [x for x in Counter([x.count for x in fetchall(q)]).items() ]
     rv.sort(key=lambda x:-x[0])
     return rv
@@ -437,9 +447,10 @@ def full_proposal_list(email):
             COALESCE(bg.name, '') AS batchgroup,
             EXISTS (SELECT 1 FROM users
                     WHERE users.email = ANY(p.author_emails)) as progcom_member
-            FROM proposals AS p 
+            FROM proposals AS p
             LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
             WHERE NOT (%s = ANY(p.author_emails))
+                    AND NOT proposals.widthdrawn
             ORDER BY p.id'''
     raw = [x._asdict() for x in fetchall(q, email)]
     batch = get_batch_coverage()
@@ -482,9 +493,10 @@ def vote_group(batchgroup, voter, accept):
     execute(q, [[accept, batchgroup, voter]])
 
 def raw_list_groups():
-    rv = fetchall('''SELECT batchgroups.*, 
+    rv = fetchall('''SELECT batchgroups.*,
         (SELECT COUNT(*) FROM proposals
             WHERE proposals.batchgroup = batchgroups.id) AS talk_count
+                    AND NOT proposals.widthdrawn
             FROM batchgroups
             ORDER BY lower(name)''')
     rv = [x._asdict() for x in rv]
@@ -511,7 +523,8 @@ def get_batch_stats():
             batchmap[vote.batchgroup][selection] += 1
 
     q = '''SELECT batchgroup as id, COUNT(id) as proposals FROM proposals
-            WHERE batchgroup IS NOT NULL GROUP BY batchgroup'''
+            WHERE batchgroup IS NOT NULL GROUP BY batchgroup
+                    AND NOT proposals.widthdrawn'''
     rv = [x._asdict() for x in fetchall(q)]
     for group in rv:
         id = group['id']
@@ -533,9 +546,10 @@ def list_groups(userid):
     user = get_user(userid)
     q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted,
             (SELECT COUNT(*) FROM proposals
-                WHERE proposals.batchgroup = tg.id) as count
+                WHERE proposals.batchgroup = tg.id
+                    AND NOT proposals.widthdrawn) as count
             FROM batchgroups as tg
-            LEFT JOIN batchvotes as tv 
+            LEFT JOIN batchvotes as tv
             ON (tg.id=tv.batchgroup AND tv.voter = %s)
             WHERE NOT (%s = ANY(author_emails))
             ORDER BY tg.locked, tg.name'''
@@ -550,9 +564,11 @@ def get_group(batchgroup):
 
 def get_group_proposals(batchgroup):
     q = '''SELECT proposals.*, count(batchvotes.voter)
-            FROM proposals LEFT JOIN batchvotes 
+            FROM proposals LEFT JOIN batchvotes
                 ON (proposals.id = ANY(batchvotes.accept))
-            WHERE proposals.batchgroup=%s GROUP BY proposals.id'''
+            WHERE proposals.batchgroup=%s
+                    AND NOT proposals.widthdrawn
+            GROUP BY proposals.id'''
     rv = fetchall(q, batchgroup)
     rv = [_clean_proposal(x._asdict()) for x in rv]
     return rv
@@ -570,7 +586,8 @@ def get_batch_vote(batchgroup, voter):
 
 def get_batch_coverage():
     q = '''SELECT id, data->>'title' as title, author_names, batchgroup
-            FROM proposals WHERE batchgroup IS NOT NULL'''
+            FROM proposals WHERE batchgroup IS NOT NULL
+                    AND NOT proposals.widthdrawn'''
     groups = defaultdict(dict)
     for row in fetchall(q):
         groups[row.batchgroup][row.id] = 0
@@ -602,7 +619,8 @@ def get_my_pycon(user):
     q = '''SELECT data->>'title' AS title, id,
             array_to_string(author_names, ', ') AS author_names,
             accepted
-            FROM proposals WHERE batchgroup IS NOT NULL'''
+            FROM proposals WHERE batchgroup IS NOT NULL
+                    AND NOT proposals.widthdrawn'''
     proposals = {row.id:row for row in fetchall(q)}
 
     q = 'SELECT id, name FROM batchgroups'
@@ -655,7 +673,7 @@ def add_batch_message(frm, batch, body):
     return id
 
 def get_batch_messages(batch):
-    q = '''SELECT batchmessages.*, users.display_name 
+    q = '''SELECT batchmessages.*, users.display_name
             FROM batchmessages LEFT JOIN users ON (users.id=batchmessages.frm)
             WHERE batchmessages.batch=%s ORDER BY batchmessages.created ASC'''
     return fetchall(q, batch)
@@ -707,7 +725,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
 
     if users:
         q = '''INSERT INTO unread (proposal, voter) SELECT %s, %s
-                WHERE NOT EXISTS 
+                WHERE NOT EXISTS
                     (SELECT 1 FROM unread WHERE proposal=%s AND voter=%s)'''
         execute(q, [(proposal, x, proposal, x) for x in users])
 
@@ -717,8 +735,8 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         for to, key in generate_author_keys(proposal).items():
             url = 'https://{}/feedback/{}'.format(_WEB_HOST, key)
             edit_url = 'httpss://us.pycon.org/2018/proposals/{}/'.format(proposal)
-            rendered = email.render(proposal=full_proposal, body=body, 
-                                url=url, edit_url=edit_url) 
+            rendered = email.render(proposal=full_proposal, body=body,
+                                url=url, edit_url=edit_url)
             msg = {
                 "personalizations": [
                     {
@@ -873,7 +891,7 @@ def email_new_user_pending(email, name):
     }
 
     _SENDGRID.client.mail.send.post(request_body=msg)
- 
+
 def send_weekly_update():
     if datetime.datetime.now().isoweekday() != 2:
         return
@@ -943,7 +961,7 @@ def _get_raw_docs():
     rv = {}
     all_words = Counter()
     for row in raw_documents:
-        rv[row.id] = _get_words(' '.join(v for k,v in row.data.items() 
+        rv[row.id] = _get_words(' '.join(v for k,v in row.data.items()
                                                 if k not in ignore_keys))
         all_words.update(set(rv[row.id]))
 
@@ -1004,7 +1022,7 @@ def get_schedule():
                     proposals.data->>'title' AS title,
                     proposals.id AS proposal_id,
                     array_to_string(proposals.author_names, ', ') AS author_names
-            FROM schedules 
+            FROM schedules
             LEFT JOIN proposals
                 ON (proposals.id = schedules.proposal)
             LEFT JOIN batchgroups
@@ -1070,7 +1088,7 @@ def send_emails():
     acceptance = 0
     declined = 0
     q = 'SELECT proposal, email FROM confirmations'
-    already_sent = {(x.proposal, x.email) 
+    already_sent = {(x.proposal, x.email)
                         for x in fetchall(q)}
     for p in fetchall('SELECT * FROM proposals'):
         for name, email in zip(p.author_names, p.author_emails):
