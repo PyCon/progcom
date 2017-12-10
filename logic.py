@@ -121,7 +121,8 @@ def get_user(id):
             EXISTS (SELECT 1 FROM votes
                         INNER JOIN proposals ON (votes.proposal = proposals.id)
                         WHERE votes.voter=%s
-                                AND proposals.updated > votes.updated_on)
+                                AND proposals.updated > votes.updated_on
+                                AND NOt proposals.withdrawn)
                 AS revisit
             FROM users WHERE id=%s'''
     return fetchone(q, id, id, id)
@@ -133,7 +134,8 @@ def list_users():
             (SELECT MAX(updated_on) FROM votes WHERE users.id=votes.voter)
             AS last_voted,
             (SELECT COUNT(*) FROM proposals
-                WHERE lower(users.email) = ANY(author_emails))
+                WHERE lower(users.email) = ANY(author_emails)
+                    AND NOT proposals.withdrawn)
             AS proposals_made
             FROM users
             ORDER BY id'''
