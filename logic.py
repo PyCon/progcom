@@ -369,7 +369,6 @@ def _js_time(d):
 def get_votes_by_day():
     q = '''SELECT COUNT(*) as count,
             date_trunc('day', updated_on) AS day
-            WHERE NOT proposals.withdrawn
             FROM votes GROUP BY day'''
     results = {x.day.date().isoformat():x.count for x in fetchall(q)}
     full = pd.Series(results)
