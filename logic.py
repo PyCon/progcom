@@ -116,13 +116,16 @@ def get_user(id):
     if not id:
         return None
     q = '''SELECT id, email, display_name, approved_on IS NOT NULL AS approved,
-            EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1)
+            EXISTS (SELECT 1 FROM unread
+                        INNER JOIN proposals ON (unread.proposal = proposals.id)
+                        WHERE unread.voter=%s
+                                AND NOT proposals.withdrawn limit 1)
                 AS unread,
             EXISTS (SELECT 1 FROM votes
                         INNER JOIN proposals ON (votes.proposal = proposals.id)
                         WHERE votes.voter=%s
                                 AND proposals.updated > votes.updated_on
-                                AND NOt proposals.withdrawn)
+                                AND NOT proposals.withdrawn)
                 AS revisit
             FROM users WHERE id=%s'''
     return fetchone(q, id, id, id)
@@ -768,7 +771,7 @@ def get_unread(userid):
     q = '''SELECT unread.proposal as id, proposals.data->>'title' as title
                 FROM unread
                 LEFT JOIN proposals ON (unread.proposal = proposals.id)
-                WHERE voter=%s'''
+                WHERE voter=%s AND NOT proposals.withdrawn'''
     return fetchall(q, userid)
 
 def is_unread(userid, proposal):
