@@ -11,14 +11,12 @@ year was no exception. Both the quantity and the quality of proposals
 we received were extraordinary. We only have 95 spaces in the schedule,
 and we had to make many hard choices.
 
-We'd like to have a collection of past proposals we can use in the
-future to help potential PyCon speakers out. If you are amenable
-to us publicly sharing your proposal, please reply to this email and
-let me know! We will work with you to make sure we anonymize your
-proposal properly.
+New this year, you can request feedback after March 1st by sending an email to pycon-program-committee@python.org with the subject line: TALK FEEDBACK and your talk’s title. This will be a slow process this year, and it might take a while to get back to you.
+
+The included feedback will be based on your talk’s scores in the first round of voting, and will indicate if your talk made it to the second round. I can tell you that the vast majority of feedback will be that you just missed out in the final cut as many talks were still being considered when the final selections were made. Again, you can request this feedback beginning on March 1st. Please make sure the subject line is correct, as requests with the wrong subject or prior to March 1st will get missed by our process.
 
 I hope you still decide to attend PyCon! It's an amazing conference,
-and we still have several venues in which you could deliver your
+and we still have several avenues by which you could deliver your
 material. Lightning talks are quick, five-minute talks on any topic,
 and open spaces provide dedicated rooms for informal, unscheduled
 proposals and discussions.
@@ -31,21 +29,23 @@ the PyCon website, https://us.pycon.org/2018/events/open-spaces/
 
 If you plan to come, you should register at
 https://us.pycon.org/2018/registration/ as soon as possible. We have
-a limited number of tickets, and we expect to sell out. Waiting to buy
-tickets means you might not be able to come!
+a limited number of tickets, and we expect to sell out.
 
 If you have any other questions, comments, or feedback, please feel
-free to contact me (jason+pcc@mailthemyers.com), or the conference chair,
-Ernest Dubin (ernest@python.org).
+free to contact the Program Committee Chairs (pycon-program-committee@python.org).
 
 On behalf of the PyCon staff, I want to thank you again for your
 submission. You made our job of picking talks very hard, and the
 conference will be better for it.
 
-I hope to see you in Portland!
+I hope to see you in Cleveland!
 
 
 
 Jason Myers
-Program Chair, PyCon 2018
-jason+pcc@mailthemyers.com
+Jackie Kazil
+Lorena Mesa
+Program Chairs, PyCon 2018
+pycon-program-committee@python.org
+
+
