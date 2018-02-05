@@ -26,8 +26,9 @@ as soon as possible; please don't delay, tickets do sell out!
 PyCon provides speaker financial assistance to anyone that requests it. If you
 would like to get speaker financial assistance, please select the box on your
 speaker profile (https://us.pycon.org/2018/speaker/edit/) for speaker financial
-assistance by February 15, 2018. PyCon helps fund all of the community support
-that the Python Software Foundation gives (https://www.python.org/psf/records/board/resolutions/).
+assistance by February 15, 2018. If you check the box, our meeting planners
+will contact you by February 16th to gather details. PyCon helps fund all of
+the community support that the Python Software Foundation gives (https://www.python.org/psf/records/board/resolutions/).
 Because of that, we encourage those that can, to pay for their conference
 registrations. To read more about what the Python Software Foundation does,
 read their year-in-review blog (http://pyfound.blogspot.com/2018/01/2017-year-in-review.html).
