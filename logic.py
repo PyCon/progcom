@@ -1110,7 +1110,7 @@ def send_emails():
                     ],
                     "from": {
                         "email": _EMAIL_FROM,
-                        "name": "PyCon Programming Committee"
+                        "name": "PyCon Program Committee"
                     },
                     "content": [
                         {
@@ -1138,7 +1138,7 @@ def send_emails():
                 ],
                 "from": {
                     "email": _EMAIL_FROM,
-                    "name": "PyCon Programming Committee"
+                    "name": "PyCon Program Committee"
                 },
                 "content": [
                     {
