@@ -1102,6 +1102,7 @@ def send_emails():
                 print 'ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)
                 continue
             if not p.accepted:
+                print "Declined: %s:%s" % (p.id, email)
                 text = decline.render(name=name, title=p.data['title'])
                 msg = {
                     "personalizations": [
@@ -1112,7 +1113,7 @@ def send_emails():
                     ],
                     "from": {
                         "email": _EMAIL_FROM,
-                        "name": "PyCon Progamming Committee"
+                        "name": "PyCon Programming Committee"
                     },
                     "content": [
                         {
@@ -1140,7 +1141,7 @@ def send_emails():
                 ],
                 "from": {
                     "email": _EMAIL_FROM,
-                    "name": "PyCon Progamming Committee"
+                    "name": "PyCon Programming Committee"
                 },
                 "content": [
                     {
@@ -1150,6 +1151,7 @@ def send_emails():
                 ]
             }
 
+            print "Accepted: %s:%s" % (p.id, email)
             print _SENDGRID.client.mail.send.post(request_body=msg).body
 
             acceptance +=1
