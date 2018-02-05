@@ -43,7 +43,8 @@ your submission. We're looking forward to seeing you at the conference; PyCon
 2018 promises to be the best PyCon yet, and that's because of our amazing
 speakers. We're thrilled that you're one of them.
 
-Eager to share the news on social media? Please use our hashtag for this years conference: #pycon2018
+Eager to share the news on social media? Please use our hashtag for this years conference: 
+#pycon2018.
 
 See you in Cleveland!
 
