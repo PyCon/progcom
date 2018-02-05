@@ -4,7 +4,6 @@ Congratulations! Your talk,
 "{{title}}"
 has been accepted to PyCon 2018!
 
-
 The committee judged the version of your talk that was submitted by our
 deadline. You can see that version of your talk here, {{url}}. Visiting this
 link will confirm that you've received this email and is critical for us to
@@ -43,6 +42,8 @@ On behalf of the PyCon staff, the Program team would like to thank you for
 your submission. We're looking forward to seeing you at the conference; PyCon
 2018 promises to be the best PyCon yet, and that's because of our amazing
 speakers. We're thrilled that you're one of them.
+
+Eager to share the news on social media? Please use our hashtag for this years conference: #pycon2018
 
 See you in Cleveland!
 
