@@ -738,7 +738,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         email = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
             url = 'https://{}/feedback/{}'.format(_WEB_HOST, key)
-            edit_url = 'https://us.pycon.org/2018/proposals/{}/'.format(proposal)
+            edit_url = 'https://us.pycon.org/2019/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body,
                                 url=url, edit_url=edit_url)
             msg = {
@@ -1108,7 +1108,7 @@ def send_emails():
                     "personalizations": [
                         {
                             "to": [{"email": email}],
-                            "subject": u'PyCon 2018: Proposal Decision -- '+p.data['title'],
+                            "subject": u'PyCon 2019: Proposal Decision -- '+p.data['title'],
                         }
                     ],
                     "from": {
@@ -1136,7 +1136,7 @@ def send_emails():
                 "personalizations": [
                     {
                         "to": [{"email": email}],
-                        "subject": u'PyCon 2018: Talk Acceptance -- '+p.data['title'],
+                        "subject": u'PyCon 2019: Talk Acceptance -- '+p.data['title'],
                     }
                 ],
                 "from": {

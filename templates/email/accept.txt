@@ -2,7 +2,7 @@ Dear {{name}},
 
 Congratulations! Your talk,
 "{{title}}"
-has been accepted to PyCon 2018!
+has been accepted to PyCon 2019!
 
 The committee judged the version of your talk that was submitted by our
 deadline. You can see that version of your talk here, {{url}}. Visiting this
@@ -19,13 +19,13 @@ shortly. If you have particular scheduling requirements (if you plan to come
 to PyCon late or leave early, for example), please let us know by Feb 12th,
 so that we can take your requirements into account.
 
-You should register for the conference at https://us.pycon.org/2018/registration/
+You should register for the conference at https://us.pycon.org/2019/registration/
 as soon as possible; please don't delay, tickets do sell out!
 
 PyCon provides speaker financial assistance to anyone that requests it. If you
 would like to get speaker financial assistance, please select the box on your
-speaker profile (https://us.pycon.org/2018/speaker/edit/) for speaker financial
-assistance by February 15, 2018. If you check the box, our meeting planners
+speaker profile (https://us.pycon.org/2019/speaker/edit/) for speaker financial
+assistance by February 15, 2019. If you check the box, our meeting planners
 will contact you by February 16th to gather details. PyCon helps fund all of
 the community support that the Python Software Foundation gives (https://www.python.org/psf/records/board/resolutions/).
 Because of that, we encourage those that can, to pay for their conference
@@ -33,24 +33,24 @@ registrations. To read more about what the Python Software Foundation does,
 read their year-in-review blog (http://pyfound.blogspot.com/2018/01/2017-year-in-review.html).
 
 Speakers outside the US, if you need assistance with invitation letters for
-your immigration paperwork, please contact our registration team (pycon2018@cteusa.com).
+your immigration paperwork, please contact our registration team (pycon2019@cteusa.com).
 
 If you have any other questions, comments, or feedback, please feel free to
 contact us at (pycon-program-committee@python.org).
 
 On behalf of the PyCon staff, the Program team would like to thank you for
 your submission. We're looking forward to seeing you at the conference; PyCon
-2018 promises to be the best PyCon yet, and that's because of our amazing
+2019 promises to be the best PyCon yet, and that's because of our amazing
 speakers. We're thrilled that you're one of them.
 
 Eager to share the news on social media? Please use our hashtag for this years conference: 
-#pycon2018.
+#pycon2019.
 
 See you in Cleveland!
 
 Jason Myers
 Jackie Kazil
 Lorena Mesa
-Program Chairs, PyCon 2018
+Program Chairs, PyCon 2019
 pycon-program-committee@python.org
 
