@@ -1,12 +1,12 @@
-Dear {{Speaker}},
+Dear {{name}},
 
 Congratulations! Your talk,
-{{talk name}}
+{{title}}
 has been accepted to PyCon 2019!
 
 Please read through this email carefully for your next steps.
 
-The committee judged the version of your talk that was submitted by our deadline. You can see that version of your talk here, {{Talk/Confirmation/Link}}. Visiting this link will confirm that you've received this email and is critical for us to know you know you’ve been accepted.  Please review your proposal, and if you need to make changes to your title or abstract, please contact the team by emailing us at pycon-program-committee@python.org. We'll be announcing the list of accepted talks shortly. If
+The committee judged the version of your talk that was submitted by our deadline. You can see that version of your talk here, {{url}}. Visiting this link will confirm that you've received this email and is critical for us to know you know you’ve been accepted.  Please review your proposal, and if you need to make changes to your title or abstract, please contact the team by emailing us at pycon-program-committee@python.org. We'll be announcing the list of accepted talks shortly. If
 you can no longer give this talk, please contact us by Feb 18th so that we can find a replacement. 
 
 We haven't yet completed the schedule, so we don't yet know whether you've been allocated a 30 or a 45-minute time slot. We'll be announcing the schedule shortly. If you have particular scheduling requirements (if you plan to come to PyCon late or leave early, for example), please let us know by Feb 12th, so that we can take your requirements into account.
