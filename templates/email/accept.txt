@@ -13,7 +13,7 @@ We haven't yet completed the schedule, so we don't yet know whether you've been 
 
 You should register for the conference at https://us.pycon.org/2019/registration/ as soon as possible; please don't delay, tickets do sell out!
 
-PyCon provides speaker financial assistance to anyone that requests it. If you would like to get speaker financial assistance, please select the box on your speaker profile (https://us.pycon.org/2019/speaker/edit/) for speaker financial assistance by February 12, 2019. PyCon helps fund all of the community support that the Python Software Foundation gives (https://www.python.org/psf/records/board/resolutions/). Because of that, we encourage those that can, to pay for their conference registrations. To read more about what the Python Software Foundation does, read their year-in-review blog (http://pyfound.blogspot.com/2019/01/2018-in-review.html).  
+PyCon provides speaker grants to anyone that requests it. If you would like to get a speaker grant, please select the box on your speaker profile (https://us.pycon.org/2019/speaker/edit/) for speaker financial assistance by February 12, 2019 and begin to assess your travel plans and costs, the PyCon financial aid team will be contacting accepted speakers on the 13th to collect your requirements. 
 
 Speakers outside the US, if you need assistance with invitation letters for your immigration paperwork, please
 contact our registration team (pycon-reg@python.org).
