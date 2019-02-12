@@ -1,50 +1,26 @@
-Dear {{name}},
+Dear {{Speaker}},
 
 Congratulations! Your talk,
-"{{title}}"
+{{talk name}}
 has been accepted to PyCon 2019!
 
-The committee judged the version of your talk that was submitted by our
-deadline. You can see that version of your talk here, {{url}}. Visiting this
-link will confirm that you've received this email and is critical for us to
-know you know you’ve been accepted.  Please review your proposal, and if you
-need to make changes to your title or abstract, please contact the team by
-emailing us at pycon-program-committee@python.org. We'll be announcing the
-list of accepted talks shortly. If you can no longer give this talk, please
-contact us by Feb 12th so that we can find a replacement.
+Please read through this email carefully for your next steps.
 
-We haven't yet completed the schedule, so we don't yet know whether you've
-been allocated a 30 or a 45 minute time slot. We'll be announcing the schedule
-shortly. If you have particular scheduling requirements (if you plan to come
-to PyCon late or leave early, for example), please let us know by Feb 12th,
-so that we can take your requirements into account.
+The committee judged the version of your talk that was submitted by our deadline. You can see that version of your talk here, {{Talk/Confirmation/Link}}. Visiting this link will confirm that you've received this email and is critical for us to know you know you’ve been accepted.  Please review your proposal, and if you need to make changes to your title or abstract, please contact the team by emailing us at pycon-program-committee@python.org. We'll be announcing the list of accepted talks shortly. If
+you can no longer give this talk, please contact us by Feb 18th so that we can find a replacement. 
 
-You should register for the conference at https://us.pycon.org/2019/registration/
-as soon as possible; please don't delay, tickets do sell out!
+We haven't yet completed the schedule, so we don't yet know whether you've been allocated a 30 or a 45-minute time slot. We'll be announcing the schedule shortly. If you have particular scheduling requirements (if you plan to come to PyCon late or leave early, for example), please let us know by Feb 12th, so that we can take your requirements into account.
 
-PyCon provides speaker financial assistance to anyone that requests it. If you
-would like to get speaker financial assistance, please select the box on your
-speaker profile (https://us.pycon.org/2019/speaker/edit/) for speaker financial
-assistance by February 15, 2019. If you check the box, our meeting planners
-will contact you by February 16th to gather details. PyCon helps fund all of
-the community support that the Python Software Foundation gives (https://www.python.org/psf/records/board/resolutions/).
-Because of that, we encourage those that can, to pay for their conference
-registrations. To read more about what the Python Software Foundation does,
-read their year-in-review blog (http://pyfound.blogspot.com/2018/01/2017-year-in-review.html).
+You should register for the conference at https://us.pycon.org/2019/registration/ as soon as possible; please don't delay, tickets do sell out!
 
-Speakers outside the US, if you need assistance with invitation letters for
-your immigration paperwork, please contact our registration team (pycon2019@cteusa.com).
+PyCon provides speaker financial assistance to anyone that requests it. If you would like to get speaker financial assistance, please select the box on your speaker profile (https://us.pycon.org/2019/speaker/edit/) for speaker financial assistance by February 12, 2019. PyCon helps fund all of the community support that the Python Software Foundation gives (https://www.python.org/psf/records/board/resolutions/). Because of that, we encourage those that can, to pay for their conference registrations. To read more about what the Python Software Foundation does, read their year-in-review blog (http://pyfound.blogspot.com/2019/01/2018-in-review.html).  
 
-If you have any other questions, comments, or feedback, please feel free to
-contact us at (pycon-program-committee@python.org).
+Speakers outside the US, if you need assistance with invitation letters for your immigration paperwork, please
+contact our registration team (pycon-reg@python.org).
 
-On behalf of the PyCon staff, the Program team would like to thank you for
-your submission. We're looking forward to seeing you at the conference; PyCon
-2019 promises to be the best PyCon yet, and that's because of our amazing
-speakers. We're thrilled that you're one of them.
+If you have any other questions, comments, or feedback, please feel free to contact us at (pycon-program-committee@python.org).
 
-Eager to share the news on social media? Please use our hashtag for this years conference: 
-#pycon2019.
+On behalf of the PyCon staff, the Program team would like to thank you for your submission. We're looking forward to seeing you at the conference; PyCon 2019 promises to be the best PyCon yet, and that's because of our amazing speakers. We're thrilled that you're one of them.
 
 See you in Cleveland!
 
@@ -53,4 +29,5 @@ Jackie Kazil
 Lorena Mesa
 Program Chairs, PyCon 2019
 pycon-program-committee@python.org
+
 
