@@ -1102,29 +1102,29 @@ def send_emails():
                 print 'ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)
                 continue
             if not p.accepted:
-                print "Declined: %s:%s" % (p.id, email)
-                text = decline.render(name=name, title=p.data['title'])
-                msg = {
-                    "personalizations": [
-                        {
-                            "to": [{"email": email}],
-                            "subject": u'PyCon 2019: Proposal Decision -- '+p.data['title'],
-                        }
-                    ],
-                    "from": {
-                        "email": _EMAIL_FROM,
-                        "name": "PyCon Program Committee"
-                    },
-                    "content": [
-                        {
-                            "type": "text/plain",
-                            "value": text,
-                        }
-                    ]
-                }
+#                 print "Declined: %s:%s" % (p.id, email)
+#                 text = decline.render(name=name, title=p.data['title'])
+#                 msg = {
+#                     "personalizations": [
+#                         {
+#                             "to": [{"email": email}],
+#                             "subject": u'PyCon 2019: Proposal Decision -- '+p.data['title'],
+#                         }
+#                     ],
+#                     "from": {
+#                         "email": _EMAIL_FROM,
+#                         "name": "PyCon Program Committee"
+#                     },
+#                     "content": [
+#                         {
+#                             "type": "text/plain",
+#                             "value": text,
+#                         }
+#                     ]
+#                 }
 
-                print _SENDGRID.client.mail.send.post(request_body=msg).body
-                declined +=1
+#                 print _SENDGRID.client.mail.send.post(request_body=msg).body
+#                 declined +=1
                 continue
             q = '''INSERT INTO confirmations (proposal, email)
                     VALUES (%s, %s) RETURNING id'''
