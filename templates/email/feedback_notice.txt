@@ -4,9 +4,9 @@ You have received feedback on your PyCon talk proposal,
 
 A program committee member sent you the following comment,
 
-- - - - - - - - - - - - - - - - - - - - - - -
+---------------------------------------------
 {{body}}
-- - - - - - - - - - - - - - - - - - - - - - -
+---------------------------------------------
 
 To response to this message directly, please go here:
 
