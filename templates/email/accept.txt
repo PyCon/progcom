@@ -2,7 +2,7 @@ Dear {{name}},
 
 Congratulations! Your talk,
 {{title}}
-has been accepted to PyCon 2019!
+has been accepted to PyCon 2020!
 
 Please read through this email carefully for your next steps.
 
@@ -11,23 +11,23 @@ you can no longer give this talk, please contact us by Feb 18th so that we can f
 
 We haven't yet completed the schedule, so we don't yet know whether you've been allocated a 30 or a 45-minute time slot. We'll be announcing the schedule shortly. If you have particular scheduling requirements (if you plan to come to PyCon late or leave early, for example), please let us know by Feb 12th, so that we can take your requirements into account.
 
-You should register for the conference at https://us.pycon.org/2019/registration/ as soon as possible; please don't delay, tickets do sell out!
+You should register for the conference at https://us.pycon.org/2020/registration/ as soon as possible; please don't delay, tickets do sell out!
 
-PyCon provides speaker grants to anyone that requests it. If you would like to get a speaker grant, please select the box on your speaker profile (https://us.pycon.org/2019/speaker/edit/) for speaker financial assistance by February 12, 2019 and begin to assess your travel plans and costs, the PyCon financial aid team will be contacting accepted speakers on the 13th to collect your requirements. 
+PyCon provides speaker grants to anyone that requests it. If you would like to get a speaker grant, please select the box on your speaker profile (https://us.pycon.org/2020/speaker/edit/) for speaker financial assistance by February 12, 2020 and begin to assess your travel plans and costs, the PyCon financial aid team will be contacting accepted speakers on the 13th to collect your requirements. 
 
 Speakers outside the US, if you need assistance with invitation letters for your immigration paperwork, please
 contact our registration team (pycon-reg@python.org).
 
 If you have any other questions, comments, or feedback, please feel free to contact us at (pycon-program-committee@python.org).
 
-On behalf of the PyCon staff, the Program team would like to thank you for your submission. We're looking forward to seeing you at the conference; PyCon 2019 promises to be the best PyCon yet, and that's because of our amazing speakers. We're thrilled that you're one of them.
+On behalf of the PyCon staff, the Program team would like to thank you for your submission. We're looking forward to seeing you at the conference; PyCon 2020 promises to be the best PyCon yet, and that's because of our amazing speakers. We're thrilled that you're one of them.
 
 See you in Cleveland!
 
 Jason Myers
 Jackie Kazil
 Lorena Mesa
-Program Chairs, PyCon 2019
+Program Chairs, PyCon 2020
 pycon-program-committee@python.org
 
 
