@@ -12,6 +12,9 @@ To response to this message directly, please go here:
 
 {{url}}
 
+Please do not identify yourself in your reply, as
+talk reviews are to remain anonymous at this time.
+
 To edit your talk, please go here:
 
 {{edit_url}}
