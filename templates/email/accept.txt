@@ -22,11 +22,15 @@ If you have any other questions, comments, or feedback, please feel free to cont
 
 On behalf of the PyCon staff, the Program team would like to thank you for your submission. We're looking forward to seeing you at the conference; PyCon 2020 promises to be the best PyCon yet, and that's because of our amazing speakers. We're thrilled that you're one of them.
 
-See you in Cleveland!
+See you in Pittsburgh!
 
-Jason Myers
-Jackie Kazil
+
+
+Melinda Shore
 Lorena Mesa
+Philippe Gagnon
+Brian Costlow
+Maricela Sanchez Miranda
 Program Chairs, PyCon 2020
 pycon-program-committee@python.org
 
