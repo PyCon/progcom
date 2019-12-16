@@ -48,13 +48,15 @@ On behalf of the PyCon staff, I want to thank you again for your
 submission. You made our job of picking talks very hard, and the
 conference will be better for it.
 
-I hope to see you in Cleveland!
+I hope to see you in Pittsburgh!
 
 
 
-Jason Myers
-Jackie Kazil
+Melinda Shore
 Lorena Mesa
+Philippe Gagnon
+Brian Costlow
+Maricela Sanchez Miranda
 Program Chairs, PyCon 2020
 pycon-program-committee@python.org
 
