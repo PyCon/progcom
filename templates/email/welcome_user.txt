@@ -27,7 +27,7 @@ of review will also occur on {{ url }}, but we'll describe how those
 will work in a future mailing list message.
 
 We talk about proposals on a slack channel; if you are not already on the PSF slack
-at https://thepsf.slack.com/ please email melinda.shore@nomountain.net.
+at https://thepsf.slack.com/ please email philgagnon1@gmail.com.
 
 Thank you so much for your help in making this year's PyCon program--we can't do
 it without your time and thoughtful input. We hope you have fun reading these
