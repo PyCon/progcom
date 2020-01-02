@@ -130,6 +130,9 @@ def new_user_post():
     email = request.values.get('email')
     name = request.values.get('name')
     pw = request.values.get('pw')
+    if not name or not name.strip():
+        flash('Please supply a display name!')
+        return redirect(url_for('new_user'))
     if not pw or not pw.strip():
         flash('No empty passwords, please!')
         return redirect(url_for('new_user'))
