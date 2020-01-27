@@ -1097,7 +1097,7 @@ def send_emails():
     q = 'SELECT proposal, email FROM declined'
     already_declined = {(x.proposal, x.email)
                             for x in fetchall(q)}
-    for p in fetchall('SELECT * FROM proposals'):
+    for p in fetchall('SELECT * FROM proposals where not withdrawn and accepted is not NULL'):
         for name, email in zip(p.author_names, p.author_emails):
             if not email or '@' not in email:
                 continue
