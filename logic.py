@@ -1094,6 +1094,9 @@ def send_emails():
     q = 'SELECT proposal, email FROM confirmations'
     already_sent = {(x.proposal, x.email)
                         for x in fetchall(q)}
+    q = 'SELECT proposal, email FROM declined'
+    already_declined = {(x.proposal, x.email)
+                            for x in fetchall(q)}
     for p in fetchall('SELECT * FROM proposals'):
         for name, email in zip(p.author_names, p.author_emails):
             if not email or '@' not in email:
@@ -1102,29 +1105,36 @@ def send_emails():
                 print 'ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)
                 continue
             if not p.accepted:
-#                 print "Declined: %s:%s" % (p.id, email)
-#                 text = decline.render(name=name, title=p.data['title'])
-#                 msg = {
-#                     "personalizations": [
-#                         {
-#                             "to": [{"email": email}],
-#                             "subject": u'PyCon 2020: Proposal Decision -- '+p.data['title'],
-#                         }
-#                     ],
-#                     "from": {
-#                         "email": _EMAIL_FROM,
-#                         "name": "PyCon Program Committee"
-#                     },
-#                     "content": [
-#                         {
-#                             "type": "text/plain",
-#                             "value": text,
-#                         }
-#                     ]
-#                 }
+                if (p.id, email) in already_declined:
+                    print 'ALREADY DECLINED PROPOSAL #{} TO {}'.format(p.id, email)
+                    continue
+                print "Declined: %s:%s" % (p.id, email)
+                text = decline.render(name=name, title=p.data['title'])
+                msg = {
+                    "personalizations": [
+                        {
+                            "to": [{"email": email}],
+                            "subject": u'PyCon 2020: Proposal Decision -- '+p.data['title'],
+                        }
+                    ],
+                    "from": {
+                        "email": _EMAIL_FROM,
+                        "name": "PyCon Program Committee"
+                    },
+                    "content": [
+                        {
+                            "type": "text/plain",
+                            "value": text,
+                        }
+                    ]
+                }
 
-#                 print _SENDGRID.client.mail.send.post(request_body=msg).body
-#                 declined +=1
+                q = '''INSERT INTO declined (proposal, email)
+                        VALUES (%s, %s) RETURNING id'''
+                _ = scalar(q, p.id, email)
+
+                print _SENDGRID.client.mail.send.post(request_body=msg).body
+                declined +=1
                 continue
             q = '''INSERT INTO confirmations (proposal, email)
                     VALUES (%s, %s) RETURNING id'''

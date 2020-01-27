@@ -149,3 +149,9 @@ CREATE TABLE confirmations (
     email           VARCHAR(254),
     acknowledged    BOOLEAN DEFAULT NULL
 );
+
+CREATE TABLE declined (
+    id              BIGSERIAL PRIMARY KEY,
+    proposal        BIGINT REFERENCES proposals,
+    email           VARCHAR(254)
+);
