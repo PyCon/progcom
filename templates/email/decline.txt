@@ -8,7 +8,7 @@ PyCon 2020.
 
 Each year brings more talk submissions than the year before, and this
 year was no exception. Both the quantity and the quality of proposals
-we received were extraordinary. We only have 95 spaces in the schedule,
+we received were extraordinary. We only have 95 slots in the schedule,
 and we had to make many hard choices.
 
 New this year, you can request feedback after March 1st by sending an
@@ -51,10 +51,8 @@ conference will be better for it.
 We hope to see you in Pittsburgh!
 
 
-
-Melinda Shore
-Lorena Mesa
 Philippe Gagnon
+Lorena Mesa
 Brian Costlow
 Maricela Sanchez Miranda
 Program Chairs, PyCon 2020

@@ -7,13 +7,13 @@ has been accepted to PyCon 2020!
 Please read through this email carefully for your next steps.
 
 The committee judged the version of your talk that was submitted by our deadline. You can see that version of your talk here, {{url}}. Visiting this link will confirm that you've received this email and is critical for us to know you know you’ve been accepted.  Please review your proposal, and if you need to make changes to your title or abstract, please contact the team by emailing us at pycon-program-committee@python.org. We'll be announcing the list of accepted talks shortly. If
-you can no longer give this talk, please contact us by Feb 18th so that we can find a replacement. 
+you can no longer give this talk, please contact us by Jan 30th so that we can find a replacement.
 
-We haven't yet completed the schedule, so we don't yet know whether you've been allocated a 30 or a 45-minute time slot. We'll be announcing the schedule shortly. If you have particular scheduling requirements (if you plan to come to PyCon late or leave early, for example), please let us know by Feb 12th, so that we can take your requirements into account.
+We haven't yet completed the schedule, so we don't yet know whether you've been allocated a 30 or a 45-minute time slot. We'll be announcing the schedule shortly. If you have particular scheduling requirements (if you plan to come to PyCon late or leave early, for example), please let us know by Jan 30th, so that we can take your requirements into account.
 
 You should register for the conference at https://us.pycon.org/2020/registration/ as soon as possible; please don't delay, tickets do sell out!
 
-PyCon provides speaker grants to anyone that requests it. If you would like to get a speaker grant, please select the box on your speaker profile (https://us.pycon.org/2020/speaker/edit/) for speaker financial assistance by February 12, 2020 and begin to assess your travel plans and costs, the PyCon financial aid team will be contacting accepted speakers on the 13th to collect your requirements. 
+PyCon provides speaker grants to anyone that requests it. If you would like to get a speaker grant, please select the box on your speaker profile (https://us.pycon.org/2020/speaker/edit/) for speaker financial assistance by January 31 and begin to assess your travel plans and costs, the PyCon financial aid team will be contacting accepted speakers on Feb 1st to collect your requirements.
 
 Speakers outside the US, if you need assistance with invitation letters for your immigration paperwork, please
 contact our registration team (pycon-reg@python.org).
@@ -25,10 +25,8 @@ On behalf of the PyCon staff, the Program team would like to thank you for your 
 See you in Pittsburgh!
 
 
-
-Melinda Shore
-Lorena Mesa
 Philippe Gagnon
+Lorena Mesa
 Brian Costlow
 Maricela Sanchez Miranda
 Program Chairs, PyCon 2020
