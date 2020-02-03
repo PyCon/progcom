@@ -50,7 +50,7 @@ TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
 TALK_IDS_FORCE = []
 
 def fetch_ids():
-    raw = api_call('/2020/api/proposals/?type=talk&limit=5000&status=undecided')
+    raw = api_call('/2020/api/proposals/?type=talk&limit=5000')
     #print len(raw['data'])
     rv = [x['id'] for x in raw['data']]
     return list(set(TALK_IDS_FORCE + rv))
