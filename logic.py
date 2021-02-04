@@ -172,10 +172,14 @@ def add_proposal(data):
     emails, names = zip(*((x['email'], x['name']) for x in data['authors']))
     del data['authors']
 
-    keys = ('id', 'description', 'duration', 'audience',
-                'abstract', 'recording_release', 'notes', 'title', 'outline',)
+    keys = (
+        'id', 'description', 'level', 'category', 'audience',
+        'abstract', 'recording_release', 'notes', 'title', 'outline',
+        'previously_presented', 'previously_presented_venue',
+    )
 
     cleaned_data = {k:data[k] for k in keys}
+    cleaned_data['duration'] = '25 minutes'
 
     """
     print 'Missing:', set(keys) - set(data.keys())
@@ -738,7 +742,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         email = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
             url = 'https://{}/feedback/{}'.format(_WEB_HOST, key)
-            edit_url = 'https://us.pycon.org/2020/proposals/{}/'.format(proposal)
+            edit_url = 'https://us.pycon.org/2021/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body,
                                 url=url, edit_url=edit_url)
             msg = {
@@ -1114,7 +1118,7 @@ def send_emails():
                     "personalizations": [
                         {
                             "to": [{"email": email}],
-                            "subject": u'PyCon 2020: Proposal Decision -- '+p.data['title'],
+                            "subject": u'PyCon 2021: Proposal Decision -- '+p.data['title'],
                         }
                     ],
                     "from": {
@@ -1146,7 +1150,7 @@ def send_emails():
                 "personalizations": [
                     {
                         "to": [{"email": email}],
-                        "subject": u'PyCon 2020: Talk Acceptance -- '+p.data['title'],
+                        "subject": u'PyCon 2021: Talk Acceptance -- '+p.data['title'],
                     }
                 ],
                 "from": {
