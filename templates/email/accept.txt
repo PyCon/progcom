@@ -2,34 +2,44 @@ Dear {{name}},
 
 Congratulations! Your talk,
 {{title}}
-has been accepted to PyCon 2021!
+has been accepted to PyCon US 2021!
 
 Please read through this email carefully for your next steps.
 
-The committee judged the version of your talk that was submitted by our deadline. You can see that version of your talk here, {{url}}. Visiting this link will confirm that you've received this email and is critical for us to know you know you’ve been accepted.  Please review your proposal, and if you need to make changes to your title or abstract, please contact the team by emailing us at pycon-program-committee@python.org. We'll be announcing the list of accepted talks shortly. If
-you can no longer give this talk, please contact us by Jan 30th so that we can find a replacement.
+The committee judged the version of your talk that was submitted by our deadline.
+You can see that version of your talk here, {{url}}. Visiting this link will confirm
+that you've received this email and is critical for us to know you know you’ve been accepted.
+Please review your proposal, and if you need to make changes to your title or abstract, please
+contact the team by emailing us at pycon-program-committee@python.org. We'll be announcing the
+list of accepted talks shortly. If you can no longer give this talk, please contact us by
+March 25, 2021 so that we can find a replacement.
 
-We haven't yet completed the schedule, so we don't yet know whether you've been allocated a 30 or a 45-minute time slot. We'll be announcing the schedule shortly. If you have particular scheduling requirements (if you plan to come to PyCon late or leave early, for example), please let us know by Jan 30th, so that we can take your requirements into account.
+Conference talks will be held virtually on May 14-15, 2021. All talks will need to be pre-recorded,
+25 minutes in length, and submitted by April 28, 2021. You will be asked to attend live during your
+scheduled time to interact with the attendees via a chat platform. Please refer to the following
+document for the full speaker guidelines: https://us.pycon.org/2021/documents/2/Speaker_Guidelines_PyCon_US_2021.pdf
 
-You should register for the conference at https://us.pycon.org/2021/registration/ as soon as possible; please don't delay, tickets do sell out!
+We are cognizant that a remote event is harder to attend for speakers located in non-US time zones,
+and we will be sending a form shortly to gather your scheduling constraints. Please fill it out as soon as possible
+as we will be announcing the schedule shortly.
 
-PyCon provides speaker grants to anyone that requests it. If you would like to get a speaker grant, please select the box on your speaker profile (https://us.pycon.org/2021/speaker/edit/) for speaker financial assistance by January 31 and begin to assess your travel plans and costs, the PyCon financial aid team will be contacting accepted speakers on Feb 1st to collect your requirements.
+You should register for the conference at https://us.pycon.org/2021/users/dashboard/ as soon as possible.
 
-Speakers outside the US, if you need assistance with invitation letters for your immigration paperwork, please
-contact our registration team (pycon-reg@python.org).
+PyCon provides speaker grants to anyone that requires assistance with recording equipment.
+If you would like to get a speaker grant, please select the box on your speaker
+profile (https://us.pycon.org/2021/speaker/edit/) for speaker financial assistance by March 25, 2021.
+You will be contacted by the financial aid team for more details.
 
 If you have any other questions, comments, or feedback, please feel free to contact us at (pycon-program-committee@python.org).
 
-On behalf of the PyCon staff, the Program team would like to thank you for your submission. We're looking forward to seeing you at the conference; PyCon 2021 promises to be the best PyCon yet, and that's because of our amazing speakers. We're thrilled that you're one of them.
-
-See you in Pittsburgh!
+On behalf of the PyCon staff, the Program team would like to thank you for your submission.
+We're looking forward to seeing you virtually at the conference; PyCon US 2021 will be a unique event,
+and that is because of our amazing speakers. We are thrilled that you're one of them.
 
 
 Philippe Gagnon
-Lorena Mesa
 Brian Costlow
+Lorena Mesa
 Maricela Sanchez Miranda
-Program Chairs, PyCon 2021
+Program Chairs, PyCon US 2021
 pycon-program-committee@python.org
-
-
