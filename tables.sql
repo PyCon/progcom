@@ -18,7 +18,7 @@ CREATE TABLE batchgroups (
 
 
 CREATE TABLE proposals (
-    id                      BIGINT PRIMARY KEY,
+    id                      VARCHAR(32) PRIMARY KEY,
     updated                 TIMESTAMP WITH TIME ZONE DEFAULT now(),
     added_on                TIMESTAMP WITH TIME ZONE DEFAULT now(),
     vote_count              INT DEFAULT 0,     --Total # of votes
@@ -38,7 +38,7 @@ CREATE TABLE proposals (
 
 CREATE TABLE schedules (
     id          BIGSERIAL PRIMARY KEY,
-    proposal    BIGINT REFERENCES proposals UNIQUE DEFAULT NULL,
+    proposal    VARCHAR(32) REFERENCES proposals UNIQUE DEFAULT NULL,
     day         INT,
     room        VARCHAR(32),
     time        TIME,
@@ -88,7 +88,7 @@ CREATE TABLE votes (
     scores      JSON,
 
     voter       BIGINT REFERENCES users,
-    proposal    BIGINT REFERENCES proposals,
+    proposal    VARCHAR(32) REFERENCES proposals,
 
     nominate    BOOLEAN DEFAULT FALSE,
 
@@ -116,14 +116,14 @@ CREATE TABLE discussion (
 
     name        VARCHAR(254) DEFAULT NULL, --Author feedback force
     frm         BIGINT REFERENCES users,
-    proposal    BIGINT REFERENCES proposals,
+    proposal    VARCHAR(32) REFERENCES proposals,
     created     TIMESTAMP WITH TIME ZONE DEFAULT now(),
     body        TEXT,
     feedback    BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE unread (
-    proposal    BIGINT REFERENCES proposals,
+    proposal    VARCHAR(32) REFERENCES proposals,
     voter       BIGINT REFERENCES users,
     PRIMARY KEY (proposal, voter)
 );
@@ -145,13 +145,13 @@ CREATE TABLE batchunread (
 
 CREATE TABLE confirmations (
     id              BIGSERIAL PRIMARY KEY,
-    proposal        BIGINT REFERENCES proposals,
+    proposal        VARCHAR(32) REFERENCES proposals,
     email           VARCHAR(254),
     acknowledged    BOOLEAN DEFAULT NULL
 );
 
 CREATE TABLE declined (
     id              BIGSERIAL PRIMARY KEY,
-    proposal        BIGINT REFERENCES proposals,
+    proposal        VARCHAR(32) REFERENCES proposals,
     email           VARCHAR(254)
 );
