@@ -5,3 +5,7 @@ dev-config/CUTOFF_FEEDBACK
 *.pyc
 certs
 deploy.retry
+/__pycache__/
+/.idea/
+/.claude/
+/.venv/
