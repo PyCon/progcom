@@ -12,33 +12,37 @@ from requests.exceptions import RequestException
 
 import logic as l
 
-API_KEY = os.environ['PYCON_API_KEY']
-API_SECRET = os.environ['PYCON_API_SECRET']
-API_HOST = os.environ['PYCON_API_HOST']
+API_KEY = os.environ["PYCON_API_KEY"]
+API_SECRET = os.environ["PYCON_API_SECRET"]
+API_HOST = os.environ["PYCON_API_HOST"]
+
 
 def api_call(uri):
-    method = 'GET'
-    body = ''
+    method = "GET"
+    body = ""
 
     timestamp = timegm(datetime.now(tz=pytz.UTC).timetuple())
-    base_string = ''.join((
-        API_SECRET,
-        str(timestamp),
-        method.upper(),
-        uri,
-        body,
-    ))
+    base_string = "".join(
+        (
+            API_SECRET,
+            str(timestamp),
+            method.upper(),
+            uri,
+            body,
+        )
+    )
 
     headers = {
-            'X-API-Key': str(API_KEY),
-            'X-API-Signature': str(sha1(base_string.encode('utf-8')).hexdigest()),
-            'X-API-Timestamp': str(timestamp),
-            }
-    url = 'http://{}{}'.format(API_HOST, uri)
+        "X-API-Key": str(API_KEY),
+        "X-API-Signature": str(sha1(base_string.encode("utf-8")).hexdigest()),
+        "X-API-Timestamp": str(timestamp),
+    }
+    url = "http://{}{}".format(API_HOST, uri)
     try:
         return requests.get(url, headers=headers).json()
     except (JSONDecodeError, RequestException):
         raise
+
 
 """
 TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
@@ -48,28 +52,31 @@ TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
 """
 TALK_IDS_FORCE = []
 
+
 def fetch_ids():
-    raw = api_call('/2021/api/proposals/?type=talk&limit=5000&status=undecided')
-    #print len(raw['data'])
-    rv = [x['id'] for x in raw['data']]
+    raw = api_call("/2021/api/proposals/?type=talk&limit=5000&status=undecided")
+    # print len(raw['data'])
+    rv = [x["id"] for x in raw["data"]]
     return list(set(TALK_IDS_FORCE + rv))
 
+
 def fetch_talk(id):
-    rv = api_call('/2021/api/proposals/{}/'.format(id))
-    if not rv or 'data' not in rv:
+    rv = api_call("/2021/api/proposals/{}/".format(id))
+    if not rv or "data" not in rv:
         return {}
-    rv = rv['data']
-    rv['authors'] = rv['speakers']
-    del rv['speakers']
-    rv.update(rv['details'])
-    del rv['details']
+    rv = rv["data"]
+    rv["authors"] = rv["speakers"]
+    del rv["speakers"]
+    rv.update(rv["details"])
+    del rv["details"]
     return rv
+
 
 def main():
     existing_ids = l.get_all_proposal_ids()
     new_ids = fetch_ids()
     for id in new_ids:
-        #print 'FETCHING {}'.format(id)
+        # print 'FETCHING {}'.format(id)
         proposal = fetch_talk(id)
         if proposal:
             l.add_proposal(proposal)
@@ -77,6 +84,6 @@ def main():
     for id in withdrawn:
         l.withdraw_proposal(id)
 
-if __name__ == '__main__':
-    main()
 
+if __name__ == "__main__":
+    main()
