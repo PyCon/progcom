@@ -1,51 +1,387 @@
-.panel table {
+/* Modern PyCon Theme - Bootstrap 5 */
+
+/* Custom color palette */
+:root {
+    --pycon-primary: #1a5f7a;
+    --pycon-primary-dark: #134a5f;
+    --pycon-secondary: #ffc93c;
+    --pycon-success: #57cc99;
+    --pycon-danger: #e63946;
+    --pycon-warning: #f4a261;
+    --pycon-info: #4ecdc4;
+    --pycon-light: #f8f9fa;
+    --pycon-dark: #212529;
+    --bs-primary: var(--pycon-primary);
+    --bs-primary-rgb: 26, 95, 122;
+}
+
+/* Typography */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f7fa;
+}
+
+/* Override Bootstrap primary color */
+.bg-primary {
+    background-color: var(--pycon-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--pycon-primary);
+    border-color: var(--pycon-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--pycon-primary-dark);
+    border-color: var(--pycon-primary-dark);
+}
+
+.btn-outline-primary {
+    color: var(--pycon-primary);
+    border-color: var(--pycon-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--pycon-primary);
+    border-color: var(--pycon-primary);
+}
+
+.text-primary {
+    color: var(--pycon-primary) !important;
+}
+
+/* Navbar enhancements */
+.navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 1rem;
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+.navbar-dark .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Card styling */
+.card {
+    border: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* Panel to Card migration helpers */
+.panel {
+    border: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    background: #fff;
+    margin-bottom: 1.5rem;
+}
+
+.panel-heading {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    border-radius: 12px 12px 0 0;
+}
+
+.panel-body {
+    padding: 1.25rem;
+}
+
+.panel-default > .panel-heading {
+    color: var(--pycon-dark);
+    background-color: #fff;
+}
+
+.panel-primary > .panel-heading {
+    color: #fff;
+    background-color: var(--pycon-primary);
+}
+
+.panel-success > .panel-heading {
+    color: #fff;
+    background-color: var(--pycon-success);
+}
+
+/* Button refinements */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.15s ease;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Form improvements */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 0.625rem 0.875rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+    border-color: var(--pycon-primary);
+    box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.15);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.form-select {
+    border-radius: 8px;
+}
+
+/* Table improvements */
+.table {
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.02);
     margin-bottom: 0;
 }
 
+.table > thead {
+    background-color: #f8f9fa;
+}
 
+.table > thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+    padding: 0.75rem 1rem;
+    border-bottom-width: 1px;
+}
+
+.table > tbody td {
+    padding: 0.875rem 1rem;
+    vertical-align: middle;
+}
+
+.panel table, .card table {
+    margin-bottom: 0;
+}
+
+/* Alert improvements */
+.alert {
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Badge improvements */
+.badge {
+    font-weight: 500;
+    padding: 0.4em 0.65em;
+    border-radius: 6px;
+}
+
+/* Well replacement */
+.well {
+    background-color: #f8f9fa;
+    padding: 1.25rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Voting interface specific styles */
 #accept li, #unranked li {
     cursor: pointer;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    transition: all 0.15s ease;
 }
+
+#unranked li {
+    background-color: #f8f9fa;
+}
+
 #unranked li:hover {
-    background-color: #f6f6f6;
+    background-color: #e9ecef;
+    transform: translateX(4px);
 }
 
 #accept li {
-    background-color: #f0fff0;
-}
-#accept li:hover {
-    background-color: #e0ffe0;
+    background-color: #d4edda;
 }
 
+#accept li:hover {
+    background-color: #c3e6cb;
+}
+
+/* Schedule block styles */
 .schedule-block {
-    border: 1px solid #bbb;
+    border: 1px solid #dee2e6;
     position: absolute;
-    width:95%;
-    margin-right:5%;
-    background:rgba(200,200,200,0.3);
+    width: 95%;
+    margin-right: 5%;
+    background: rgba(26, 95, 122, 0.1);
+    border-radius: 6px;
 }
 
 .block-header {
-    display:flex;
+    display: flex;
     justify-content: space-between;
-    width:100%;
-    padding: 3px 5%;
-    background-color: #BBB;
-    font-weight: bold;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: var(--pycon-primary);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 6px 6px 0 0;
 }
 
 .block-body {
-    width:100%;
-    padding 1px 5%;
-    font-size: 80%;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
 }
 
 #available {
     position: fixed;
-    right:0;
-    width:25%;
+    right: 0;
+    width: 25%;
     height: 50%;
     top: 49%;
-    overflow-y: scroll;
-    opacity: 0.9;
+    overflow-y: auto;
+    opacity: 0.95;
+    background: #fff;
+    border-radius: 12px 0 0 12px;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress bars */
+.progress {
+    height: 0.625rem;
+    border-radius: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    background-color: var(--pycon-primary);
+}
+
+/* List group improvements */
+.list-group-item {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 0.875rem 1.25rem;
+}
+
+.list-group-item:first-child {
+    border-radius: 12px 12px 0 0;
+}
+
+.list-group-item:last-child {
+    border-radius: 0 0 12px 12px;
+    border-bottom: none;
+}
+
+/* Activity buttons in navbar */
+#activity-buttons .btn {
+    margin-left: 0.5rem;
+}
+
+#activity-buttons .badge {
+    font-size: 0.7rem;
+}
+
+/* Utility classes */
+.shadow-soft {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.rounded-lg {
+    border-radius: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        padding-top: 1rem;
+    }
+
+    #activity-buttons {
+        margin: 1rem 0;
+    }
+}
+
+/* Animation for interactive elements */
+.btn, .card, .nav-link, .list-group-item {
+    transition: all 0.15s ease;
+}
+
+/* Print styles */
+@media print {
+    .navbar, #activity-buttons {
+        display: none !important;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+    }
 }

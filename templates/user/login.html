@@ -1,21 +1,35 @@
 {%extends "base.html"%}
 {%block body %}
-<p>This website is for members of the PyCon program committee. If you are
-interested in joining, please 
-<a href="https://mail.python.org/mailman/listinfo/pycon-pc">join the mailing list</a>!</p>
-<form method="POST">
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" 
-            name="email" placeholder="Email">
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-soft">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">Welcome Back</h2>
+                <p class="text-muted text-center mb-4">This website is for members of the PyCon program committee. If you are
+                interested in joining, please
+                <a href="https://mail.python.org/mailman/listinfo/pycon-pc">join the mailing list</a>!</p>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email"
+                            name="email" placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pw" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="pw"
+                            name="pw" placeholder="Enter your password">
+                    </div>
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{url_for('new_user')}}" class="btn btn-outline-secondary">Create Account</a>
+                        <a href="{{url_for('request_reset')}}" class="btn btn-link">Forgot Password?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="pw">Password</label>
-        <input type="password" class="form-control" id="pw"
-            name="pw" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-default">Login</button>
-    <a href="{{url_for('new_user')}}" class="btn btn-default" >Create Account</a>
-    <a href="{{url_for('request_reset')}}" class="btn btn-default" >Get Login Email</a>
-</form>
+</div>
 {%endblock body%}

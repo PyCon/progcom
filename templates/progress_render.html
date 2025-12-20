@@ -1,8 +1,16 @@
 {%macro progress_render(percent) %}
-<div class="progress"
-     title="You have reviewed {{percent}}% of talk submissions.">
-    <div class="progress-bar" style="width: {{percent}}%;">
-        {{percent}}%
+<div class="card mb-4">
+    <div class="card-body py-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">Your review progress</span>
+            <span class="fw-bold">{{percent}}%</span>
+        </div>
+        <div class="progress" style="height: 8px;"
+             title="You have reviewed {{percent}}% of talk submissions.">
+            <div class="progress-bar" role="progressbar" style="width: {{percent}}%;"
+                 aria-valuenow="{{percent}}" aria-valuemin="0" aria-valuemax="100">
+            </div>
+        </div>
     </div>
 </div>
 {%endmacro%}

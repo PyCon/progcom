@@ -2,46 +2,48 @@
 {%import "proposal_render.html" as pr%}
 {%import "progress_render.html" as prog%}
 {%block body %}
-<div class="row">
-    <div class="col-md-12">
+<div class="row mb-4">
+    <div class="col-12">
         {{ prog.progress_render(percent)}}
     </div>
 </div>
+
 <div class="row">
-    <div class="col-md-8" id="left-column">
+    <div class="col-lg-8 mb-4" id="left-column">
         {{ pr.proposal_render(proposal, anonymize=True)}}
     </div>
-    <div class="col-md-4" id="right-column">
+
+    <div class="col-lg-4" id="right-column">
         {{ pr.user_vote_render(standards, existing_vote) }}
 
         {% if existing_vote %}
         {{pr.existing_vote_render(votes, standards)}}
         {% endif %}
 
-        <div class="alert alert-warning">
-            <p>Out of respect for potential speakers and your fellow committee
+        <div class="alert alert-warning mb-4">
+            <strong>Confidential:</strong> Out of respect for potential speakers and your fellow committee
             members, please treat all of this information as confidential.
             The contents of proposals, votes, and discussions should not be
-            shared outside the program committee.</p>
+            shared outside the program committee.
         </div>
-
-        <!-- Macro here -->
 
         {{pr.discussion_render(unread, discussion)}}
 
         {% if not config.CUTOFF_FEEDBACK %}
-        <div class="panel panel-default" id="feedback">
-            <div class="panel-heading">
-                <h3 class="panel-title">Feedback</h3>
+        <div class="card mb-4" id="feedback">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Author Feedback</h5>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <form method="POST" action="feedback/" id="feedback-form">
-                    <div class="form-group">
-                        <label for="feedback">Give Author Direct Feedback</label>
-                        <textarea type="" class="form-control" id="feedback" placeholder="Feedback to email author" name="feedback"></textarea>
-                        <div class="alert alert-warning">Messages sent here are emailed directly to the proposal author!</div>
+                    <div class="mb-3">
+                        <label for="feedback" class="form-label">Send Direct Feedback to Author</label>
+                        <textarea class="form-control" id="feedback" rows="4" placeholder="Your feedback will be emailed directly to the author" name="feedback"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <div class="alert alert-warning mb-3">
+                        <small><strong>Note:</strong> Messages sent here are emailed directly to the proposal author!</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Feedback</button>
                 </form>
             </div>
         </div>

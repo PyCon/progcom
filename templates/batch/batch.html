@@ -1,51 +1,72 @@
 {%extends "base.html"%}
 {%block body %}
-<h4>Batch Review Groups</h4>
-<div class="progress" title="You have voted on {{percent}}% of the batches!">
-    <div class="progress-bar" style="width: {{percent}}%;">{{percent}}%</div>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-3">Batch Review Groups</h1>
+        <div class="card mb-4">
+            <div class="card-body py-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted small">Your batch voting progress</span>
+                    <span class="fw-bold">{{percent}}%</span>
+                </div>
+                <div class="progress" style="height: 8px;" title="You have voted on {{percent}}% of the batches!">
+                    <div class="progress-bar" role="progressbar" style="width: {{percent}}%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<table class="table table-hover table-bordered table-condensed">
-    <thead>
-        <tr>
-            <th colspan="2" data-column="name" class="warning">Name</th>
-            <th data-column="voted">Voted</th>
-            <th data-column="unread" data-reverse="1">Unread</th>
-            <th data-column="proposals">Proposals</th>
-            <th data-column="voters">Voters</th>
-            <th data-column="msgs" data-reverse="1">Messages</th>
-            <th data-column="nominated_talks">Talks Nominated</th>
-            <th data-column="nominations">Total Nominations</th>
-            <th data-column="consensus">Top Consensus Score</th>
-            <th data-column="locked" data-reverse="1">Locked</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th colspan="2" data-column="name">Name</th>
+                        <th data-column="voted">Status</th>
+                        <th data-column="unread" data-reverse="1">Unread</th>
+                        <th data-column="proposals" class="text-end">Proposals</th>
+                        <th data-column="voters" class="text-end">Voters</th>
+                        <th data-column="msgs" data-reverse="1" class="text-end">Messages</th>
+                        <th data-column="nominated_talks" class="text-end">Nominated</th>
+                        <th data-column="nominations" class="text-end">Total Noms</th>
+                        <th data-column="consensus" class="text-end">Consensus</th>
+                        <th data-column="locked" data-reverse="1">Locked</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <script type="underscore/template" id="table_row">
-<tr <%=e.locked?'class="active"':''%>>
+<tr class="<%=e.locked?'table-secondary':''%>">
     <th><%=e.id%></th>
     <td><a href="<%=e.id%>/"><%=e.name%></a></td>
     <% if(e.voted){ %>
-        <td class="success"><strong>Voted</strong></td>
+        <td><span class="badge bg-success">Voted</span></td>
     <% }else{ %>
-        <td class="danger"><strong>Not Voted</strong></td>
+        <td><span class="badge bg-danger">Not Voted</span></td>
     <% } %>
     <td>
         <% if(e.unread){ %>
-            <span class="glyphicon glyphicon-envelope"></span>
+            <span class="badge bg-warning text-dark">New</span>
         <% } %>
     </td>
-    <td class="text-right"><%=e.proposals%></td>
-    <td class="text-right"><%=e.voters%></td>
-    <td class="text-right"><%=e.msgs%></td>
-    <td class="text-right"><%=e.nominated_talks%></td>
-    <td class="text-right"><%=e.nominations%></td>
-    <td class="text-right"><%=e.consensus%>%</td>
+    <td class="text-end"><%=e.proposals%></td>
+    <td class="text-end"><%=e.voters%></td>
+    <td class="text-end"><%=e.msgs%></td>
+    <td class="text-end"><%=e.nominated_talks%></td>
+    <td class="text-end"><%=e.nominations%></td>
+    <td class="text-end"><%=e.consensus%>%</td>
     <td>
         <% if(e.locked){ %>
-            <span class="glyphicon glyphicon-lock"></span>
+            🔒
         <% } %>
+    </td>
 </tr>
 </script>
 {%endblock%}

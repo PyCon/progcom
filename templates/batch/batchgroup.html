@@ -3,32 +3,44 @@
 {%import "batch/batch_render.html" as br%}
 
 {%block body %}
-<h1>Group: {{group.name}}</h1>
-{% if group.locked %}
-<h4>This Group is Locked <span class="glyphicon glyphicon-lock"></span></h4>
-{% endif%}
-<div class="col-md-12" style="margin-bottom:1em;">
-        <ul class="nav nav-pills nav-justified" id="proposal-tabs" style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:stretch;">
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Group: {{group.name}}</h1>
+        {% if group.locked %}
+        <div class="alert alert-secondary mt-3 d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+            </svg>
+            <span class="fw-semibold">This Group is Locked</span>
+        </div>
+        {% endif%}
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <nav class="nav nav-pills flex-wrap" id="proposal-tabs">
             {% for p in proposals %}
-            <li style="width:20%;padding-bottom:0;border:1px solid #eee;">
-                <a href="#proposal-{{p.proposal.id}}" style="height:100%;">{{p.proposal.data.title}} (#{{p.proposal.id}})
-                    {% if p.proposal.count and (vote or request.user.email in config.OBSERVER_EMAILS) %}
-                    <span class="badge">{{p.proposal.count}} nominations</span>
-                    {%endif%}
-                    {% if p.proposal.accepted %}
-                    <span class="label label-success">Accepted</span>
-                    {% endif %}
-                    {% if p.proposal.accepted == False %}
-                    <span class="label label-danger">Declined</span>
-                    {% endif %}
-                </a>
-            </li>
+            <a class="nav-link m-1 border" href="#proposal-{{p.proposal.id}}" style="flex: 0 0 18%;">
+                <span class="d-block fw-semibold small">{{p.proposal.data.title}}</span>
+                <span class="text-muted small">#{{p.proposal.id}}</span>
+                {% if p.proposal.count and (vote or request.user.email in config.OBSERVER_EMAILS) %}
+                <span class="badge bg-primary ms-1">{{p.proposal.count}} nominations</span>
+                {%endif%}
+                {% if p.proposal.accepted %}
+                <span class="badge bg-success">Accepted</span>
+                {% endif %}
+                {% if p.proposal.accepted == False %}
+                <span class="badge bg-danger">Declined</span>
+                {% endif %}
+            </a>
             {% endfor %}
-        </ul>
+        </nav>
+    </div>
 </div>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-lg-8">
         <div class="tab-content">
             {% for p in proposals %}
             <div role="tabpanel" class="tab-pane" id="proposal-{{p.proposal.id}}">
@@ -39,38 +51,38 @@
                     <div class="alert alert-warning">This talk has been declined.</div>
                     {%endif%}
                 {%endif%}
-                {%if p.voters 
+                {%if p.voters
                     and (vote or request.user.email in config.OBSERVER_EMAILS) %}
-                <h4>Nominated by {{p.voters}}</h4>
+                <h5 class="text-muted mb-3">Nominated by {{p.voters}}</h5>
                 {%endif%}
                 {{pr.proposal_render(p.proposal)}}
-                <hr>
-                <h2>Screening Discussion</h2>
+                <hr class="my-4">
+                <h4 class="mb-3">Screening Discussion</h4>
                 {% for msg in p.discussion%}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                    <div class="card mb-3">
+                        <div class="card-header">
                             {% if msg.name %}
                             {{msg.name}}
                             {% else %}
                             {{msg.display_name}}
                             {% endif %}
                         </div>
-                        <div class="panel-body">
+                        <div class="card-body">
                             {{msg.body}}
                         </div>
-                            {% if msg.name %}
-                            <div class="panel-footer">
-                            <strong> Message From Author</strong>
-                            </div>
-                            {% endif %}
-                            {% if msg.feedback %}
-                            <div class="panel-footer">
-                                <strong>Message To Author</strong>
-                            </div>
-                            {% endif %}
+                        {% if msg.name %}
+                        <div class="card-footer bg-info-subtle">
+                            <strong>Message From Author</strong>
                         </div>
+                        {% endif %}
+                        {% if msg.feedback %}
+                        <div class="card-footer bg-warning-subtle">
+                            <strong>Message To Author</strong>
+                        </div>
+                        {% endif %}
+                    </div>
                 {% else %}
-                    <p>No dicussion in Screening</p>
+                    <p class="text-muted">No discussion in Screening</p>
                 {% endfor %}
 
             </div>
@@ -80,77 +92,86 @@
     </div>
 
     <script type="underscore/template" id="ordered_row">
-<li class="list-group-item"><span class="glyphicon glyphicon-star"></span> <%=title%> (#<%=id%>)
-            <input type="hidden" name="accept" value="<%=id%>"></li>
+<li class="list-group-item">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-warning me-2" viewBox="0 0 16 16">
+        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+    </svg>
+    <%=title%> (#<%=id%>)
+    <input type="hidden" name="accept" value="<%=id%>">
+</li>
     </script>
 
-    <div class="col-md-4" id="batch-right-column">
+    <div class="col-lg-4" id="batch-right-column">
 
             {% if request.user.email in config.ADMIN_EMAILS%}
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Accept/Decline Talks</h3>
+            <div class="card border-success mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Accept/Decline Talks</h5>
                 </div>
-                <table class="table table-striped">
-                    <tbody>
-                    {% for p in proposals %}
-                    <tr>
-                        <th>{{p.proposal.data.title}}</th>
-                        <td>
-                            <select class="acceptance" data-id="{{p.proposal.id}}">
-                                {% with accepted = p.proposal.accepted %}
-                                <option {%if accepted%}selected="selected"{%endif%}>Accepted</option>
-                                <option {%if not accepted and accepted == False%}selected="selected"{%endif%}>Declined</option>
-                                <option {%if accepted == None%}selected="selected"{%endif%}>Undecided</option>
-                                {% endwith %}
-                            </select>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                        {% for p in proposals %}
+                        <tr>
+                            <th class="align-middle">{{p.proposal.data.title}}</th>
+                            <td>
+                                <select class="form-select form-select-sm acceptance" data-id="{{p.proposal.id}}">
+                                    {% with accepted = p.proposal.accepted %}
+                                    <option {%if accepted%}selected="selected"{%endif%}>Accepted</option>
+                                    <option {%if not accepted and accepted == False%}selected="selected"{%endif%}>Declined</option>
+                                    <option {%if accepted == None%}selected="selected"{%endif%}>Undecided</option>
+                                    {% endwith %}
+                                </select>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             {% endif %}
 
             {% if group.progcom_members %}
-            <div class="panel panel-warning">
-                <div class="panel-body">
-                    <p>The following committee members have proposals in this group;
+            <div class="card border-warning mb-4">
+                <div class="card-body bg-warning-subtle">
+                    <p class="mb-2">The following committee members have proposals in this group;
                     please exercise discretion when discussing these proposals
                     on slack or email.</p>
-                    <ul class="list-inline">{% for m in group.progcom_members%}<li>{{m}}</li>{%endfor%}</ul>
+                    <div>{% for m in group.progcom_members%}<span class="badge bg-secondary me-1">{{m}}</span>{%endfor%}</div>
                 </div>
             </div>
             {% endif %}
 
             {% if request.user.email in config.OBSERVER_EMAILS %}
-            <h4>Voting disabled for observers.</h4>
+            <div class="alert alert-info">Voting disabled for observers.</div>
             {% else %}
             {% if not group.locked %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Select Talks</h3>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Select Talks</h5>
                 </div>
                 <form action="vote/" method="POST" id="vote">
-                <div class="panel-body">
-                    <h4>Selected Proposals</h4>
-                    <ul class="list-group" id="accept">
+                <div class="card-body">
+                    <h6 class="fw-semibold">Selected Proposals</h6>
+                    <ul class="list-group mb-3" id="accept">
                         {% for v in vote.accept%}
                         {% if v in proposal_map %}
                         <li class="list-group-item batch-vote">
-                        <span class="glyphicon glyphicon-star"></span> 
-                        {{proposal_map[v].data.title}} (#{{v}})
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-warning me-2" viewBox="0 0 16 16">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                            {{proposal_map[v].data.title}} (#{{v}})
                             <input type="hidden" name="accept" value="{{v}}">
                         </li>
                         {% endif %}
                         {% endfor %}
                     </ul>
                     <div id="notalks" class="alert alert-warning" {% if vote.accept %}style="display: none;"{% endif %}>No talks selected.</div>
-                    <h4>Remaining Proposals</h4>
+                    <h6 class="fw-semibold">Remaining Proposals</h6>
                     <ul class="list-group" id="unranked">
                         {% for p in proposals%}
                         <li data-id="{{p.proposal.id}}"
-                            class="list-group-item batch-vote"
+                            class="list-group-item list-group-item-action batch-vote"
                             id="unranked-prop-{{p.proposal.id}}"
                             {%if vote and p.proposal.id in vote.accept%}
                             style="display:none;"
@@ -161,44 +182,45 @@
                             {% endfor %}
                     </ul>
                 </div>
-                <div class="panel-footer">
-                    <button type="submit" class="btn btn-primary btn-block" id="save">Save Choices</button>
-                    <span class="help-block">Choose a talk from this group for PyCon. If none seem good enough, you may choose none;
-                        if you think there are two or three excellent, non-overlapping options, you may choose more.</span>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary w-100" id="save">Save Choices</button>
+                    <small class="text-muted d-block mt-2">Choose a talk from this group for PyCon. If none seem good enough, you may choose none;
+                        if you think there are two or three excellent, non-overlapping options, you may choose more.</small>
                 </div>
                 </form>
             </div>
             {%endif%}
         {%endif%}
-    
+
     {{br.batch_discussion(msgs, group.locked)}}
 
             {% if vote or group.locked %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Votes</h3>
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Votes</h5>
                 </div>
-                <table class="table table-striped">
-                    <tbody>
-                        {% for v in all_votes %}
-                        <tr>
-                            <th>{{v.display_name}}</th>
-                            <td>
-                                {% for id in v.accept %}
-                                <ul class="list-inline">
-                                {% if id in proposal_map %}
-                                <li>{{proposal_map[id].data.title}} (#{{id}})</li>
-                                {% endif %}
-                                </ul>
-                                {% else %}
-                                Don't advance any proposals.
-                                {% endfor %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                            {% for v in all_votes %}
+                            <tr>
+                                <th class="align-middle">{{v.display_name}}</th>
+                                <td>
+                                    {% for id in v.accept %}
+                                    <ul class="list-unstyled mb-0">
+                                    {% if id in proposal_map %}
+                                    <li>{{proposal_map[id].data.title}} (#{{id}})</li>
+                                    {% endif %}
+                                    </ul>
+                                    {% else %}
+                                    <span class="text-muted">Don't advance any proposals.</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             {% endif %}
 

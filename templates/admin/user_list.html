@@ -1,39 +1,52 @@
 {%extends "base.html"%}
 {%block body %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Email</th>
-            <th>Name</th>
-            <th>Votes</th>
-            <th>Proposals Made</th>
-            <th>Last Vote</th>
-            <th>Created On</th>
-            <th>Approved</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for u in users %}
-        <tr>
-            <td>{{u.id}}</td>
-            <td><a href="mailto:{{u.email}}">{{u.email}}</a></td>
-            <td>{{u.display_name}}</td>
-            <td>{{u.votes}}</td>
-            <td>{{u.proposals_made}}</td>
-            <td>{{u.last_voted|date}}</td>
-            <td>{{u.created_on|date}}</td>
-            <td>
-                {% if u.approved_on %}
-                {{u.approved_on|date}}
-                {% else %}
-                <form action="{{u.id}}/approve/" method="POST">
-                    <input class="btn btn-default" type="submit" value="Approve">
-                </form>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Users</h1>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Votes</th>
+                        <th>Proposals</th>
+                        <th>Last Vote</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{u.id}}</td>
+                        <td><a href="mailto:{{u.email}}">{{u.email}}</a></td>
+                        <td>{{u.display_name}}</td>
+                        <td>{{u.votes}}</td>
+                        <td>{{u.proposals_made}}</td>
+                        <td class="text-muted small">{{u.last_voted|date}}</td>
+                        <td class="text-muted small">{{u.created_on|date}}</td>
+                        <td>
+                            {% if u.approved_on %}
+                            <span class="badge bg-success">Approved</span>
+                            <small class="text-muted d-block">{{u.approved_on|date}}</small>
+                            {% else %}
+                            <form action="{{u.id}}/approve/" method="POST" class="d-inline">
+                                <button class="btn btn-sm btn-primary" type="submit">Approve</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {%endblock body%}

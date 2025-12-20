@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Congratulations - PyCon</title>
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
     </head>
-    <body>
-
+    <body class="bg-light">
 
 {%import "proposal_render.html" as pr%}
 
-<div class="container">
-<h3>Congratulations!</h3>
-<p>Your proposal, listed below, was accepted to PyCon 2021! If you have any
-    questions, want to make any changes or updates to your title or abstract,
-    have scheduling requirements, or are unable to give your talk, please let me
-    (<a href="mailto:philgagnon1@gmail.com">philgagnon1@gmail.com</a>) know as soon as possible!</p>
-<hr>
-{{pr.proposal_render(proposal, hidetimes=True)}}
+<div class="container py-5">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title mb-4">Congratulations!</h3>
+            <p class="lead">Your proposal, listed below, was accepted to PyCon 2021!</p>
+            <p>If you have any questions, want to make any changes or updates to your title or abstract,
+                have scheduling requirements, or are unable to give your talk, please let me
+                (<a href="mailto:philgagnon1@gmail.com">philgagnon1@gmail.com</a>) know as soon as possible!</p>
+            <hr class="my-4">
+            {{pr.proposal_render(proposal, hidetimes=True)}}
+        </div>
+    </div>
 </div>
     </body>
 </html>

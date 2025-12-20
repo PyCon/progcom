@@ -1,18 +1,34 @@
 {%extends "base.html"%}
 {%block body %}
-<h3>Standards</h3>
-<ul>
-    {% for r in standards %}
-    <li>{{r}}</li>
-    {% endfor %}
-</ul>
-<form method="POST">
-    <div class="form-group">
-        <label for="text">Standard</label>
-        <input type="text" class="form-control" id="text"
-                                                placeholder="New reason text" name="text">
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Standards</h1>
     </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            {% for r in standards %}
+            <li class="list-group-item">{{r}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Add Standard</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="text" class="form-label">Standard</label>
+                <input type="text" class="form-control" id="text" placeholder="New reason text" name="text">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
 
 {%endblock body%}

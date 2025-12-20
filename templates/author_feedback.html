@@ -1,73 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Author Feedback - PyCon</title>
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
     </head>
-    <body>
+    <body class="bg-light">
 
-        <div class="container-fluid">
-            <div class="col-md-6">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-warning" role="alert">{{message}}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
-        <h3>Author Feedback</h3>
-        <h4>You Are: {{name}}</h4>
-        <h4>Proposal: {{proposal.title}} (#{{proposal.id}})</h4>
-        <p>This page is for you to provide feedback to the PyCon program
-            committee. We have some suggestions or questions, shown below.</p>
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-warning" role="alert">{{message}}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% endwith %}
 
-        <p>Please be aware that any 
-        <a href="https://us.pycon.org/2021/proposals/{{proposal.id}}/"
-            target="_blank">
-            changes you make to your proposal</a>
-        will take
-        a few hours to propagate here, to our proposal review system.</p>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0">Author Feedback</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2"><strong>You Are:</strong> {{name}}</p>
+                            <p class="mb-0"><strong>Proposal:</strong> {{proposal.title}} (#{{proposal.id}})</p>
+                        </div>
+                    </div>
 
-        <p>We frequently refer to the 
-            <a href="https://us.pycon.org/2015/speaking/proposal_advice/samples/SpacePug/"
-                target="_blank">SpacePug Sample Proposal</a>.
-            In particular, we can't emphasize enough the importance of a detailed abstract and an outline with timings.
-            Links to outside supporting material is fine, but your proposal shouldn't rely on these links!
-            The more complete and self-contained your proposal is, the easier it is for us to evaluate it.</p>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <p>This page is for you to provide feedback to the PyCon program
+                                committee. We have some suggestions or questions, shown below.</p>
 
-        <table class="table table-striped">
-            {% for m in messages %}
-            {% if m.feedback %}
-                <tr>
-                    <th>{{m.display_name}}</th>
-                    <td>{{m.created|date}}</td>
-                    <td>{{m.body}}</td>
-                </tr>
-            {% endif %}
-            {% if m.name %}
-                <tr class="success">
-                    <th>{{m.name}}</th>
-                    <td>{{m.created|date}}</td>
-                    <td>{{m.body}}</td>
-                </tr>
-            {% endif %}
-            {% endfor %}
-        </table>
+                            <p>Please be aware that any
+                            <a href="https://us.pycon.org/2021/proposals/{{proposal.id}}/"
+                                target="_blank">
+                                changes you make to your proposal</a>
+                            will take
+                            a few hours to propagate here, to our proposal review system.</p>
 
-        {% if config.CUTOFF_FEEDBACK %}
-        <p>Unfortunately, the deadline for submissions has passed; replies to feedback are now disabled.</p>
-        {% else %}
-        <form method="POST">
-            <div class="form-group">
-            <textarea name="message" class="form-control" rows="3"></textarea>
+                            <p class="mb-0">We frequently refer to the
+                                <a href="https://us.pycon.org/2015/speaking/proposal_advice/samples/SpacePug/"
+                                    target="_blank">SpacePug Sample Proposal</a>.
+                                In particular, we can't emphasize enough the importance of a detailed abstract and an outline with timings.
+                                Links to outside supporting material is fine, but your proposal shouldn't rely on these links!
+                                The more complete and self-contained your proposal is, the easier it is for us to evaluate it.</p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Messages</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0">
+                                {% for m in messages %}
+                                {% if m.feedback %}
+                                    <tr>
+                                        <th>{{m.display_name}}</th>
+                                        <td class="text-muted small">{{m.created|date}}</td>
+                                        <td>{{m.body}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% if m.name %}
+                                    <tr class="table-success">
+                                        <th>{{m.name}}</th>
+                                        <td class="text-muted small">{{m.created|date}}</td>
+                                        <td>{{m.body}}</td>
+                                    </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+
+                    {% if config.CUTOFF_FEEDBACK %}
+                    <div class="alert alert-warning">
+                        Unfortunately, the deadline for submissions has passed; replies to feedback are now disabled.
+                    </div>
+                    {% else %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Reply</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <div class="mb-3">
+                                    <textarea name="message" class="form-control" rows="3" placeholder="Your message..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-              <div class="form-group">
-            <button type="submit" class="btn btn-default">Send</button>
-              </div>
-
-        </form>
-        {% endif %}
-
         </div>
     </body>
 </html>

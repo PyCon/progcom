@@ -2,16 +2,21 @@
 
 
 {%block body %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Schedule</h1>
+    </div>
+</div>
 
 {% for day, rooms in schedule|groupby('day') %}
-    <h1>Day {{day+1}}</h1>
-    <div class="row">
+    <h2 class="h4 mb-3">Day {{day+1}}</h2>
+    <div class="row mb-4">
     {% for room, blocks in rooms|groupby('room') %}
         {% with %}
             {% set minimum = blocks[0].time|minutes %}
             {% set maximum = blocks[-1].time|minutes %}
             <div class="col-md-2" style="height: {{54+3*(maximum-minimum+30)}}px;">
-                <h3>Room {{room}}</h3>
+                <h5 class="mb-3">Room {{room}}</h5>
             {% for block in blocks %}
             <div style="top:{{54+3*(block.time|minutes - minimum)}}px;
                 height:{{3*block.given_duration - 2}}px;"
@@ -39,11 +44,11 @@
 
 {%block extrajs %}
 <script type="underscore/template" id="available_talk">
-    <a class="list-group-item" data-id="<%=e.id%>">
+    <a class="list-group-item list-group-item-action" data-id="<%=e.id%>">
         <strong>#<%=e.id%> <%=e.title%><br>
         <%=e.bg_name%></strong><br>
         <em><%=e.author_names%></em><br>
-        <%=e.duration%>
+        <span class="badge bg-secondary"><%=e.duration%></span>
     </a>
 </script>
 <script type="underscore/template" id="slot_body">
@@ -60,7 +65,7 @@ function render_inline(){
         var $this = $(this),
             proposal = $this.data().proposal;
         if(!proposal){
-            $this.html('Available');
+            $this.html('<span class="text-muted">Available</span>');
             return;
         }
         proposal = _.filter(accepted, function(x){return x.id == proposal})[0];

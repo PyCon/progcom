@@ -1,10 +1,24 @@
 {%extends "base.html"%}
 {%block body %}
-<ul class="nav nav-pills nav-stacked">
-    {% for talk in talks %}
-    <li><a href="{{url_for("screening", id=talk.id)}}">{{talk.title}}</a></li>
-    {% else %}
-    <h4>You don't have any reconsiderations pending.</h4>
-    {% endfor %}
-</ul>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Reconsiderations</h1>
+    </div>
+</div>
+
+{% if talks %}
+<div class="card">
+    <div class="list-group list-group-flush">
+        {% for talk in talks %}
+        <a href="{{url_for("screening", id=talk.id)}}" class="list-group-item list-group-item-action">
+            {{talk.title}}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="alert alert-success">
+    You don't have any reconsiderations pending.
+</div>
+{% endif %}
 {%endblock body%}

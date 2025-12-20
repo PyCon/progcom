@@ -3,56 +3,75 @@
 
 {%block body %}
 {%set locked_button %}
-    <button class="btn btn-danger btn-xs lock-btn" data-lock="f"
-            type="button">
-    <span class="glyphicon glyphicon-lock"></span> Locked</button>
+    <button class="btn btn-danger btn-sm lock-btn" data-lock="f" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="me-1" viewBox="0 0 16 16">
+            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+        </svg>
+        Locked
+    </button>
 {%endset%}
 
 {%set unlocked_button %}
-    <button class="btn btn-success btn-xs lock-btn" data-lock="t"
-            type="button">Unlocked</button>
-
+    <button class="btn btn-success btn-sm lock-btn" data-lock="t" type="button">Unlocked</button>
 {%endset%}
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Talk Count</th>
-            <th>Skip Consensus</th>
-            <th>Talk Consensuses</th>
-            <th>Locked</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for g in groups %}
-        <tr>
-            <td>{{g.id}}</td>
-            <td class="name" data-id="{{g.id}}">{{g.name}}</td>
-            <td>{{g.talk_count}}</td>
-            <td>{{g.skip_consensus}}</td>
-            <td>{{g.talk_consensus|join(', ')}}</td>
-            <td data-id="{{g.id}}">
-                {%if g.locked%}
-                    {{locked_button|safe}}
-                {%else%}
-                    {{unlocked_button|safe}}
-                {%endif%}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<form method="POST">
-    <div class="form-group">
-        <label for="text">Batch Group</label>
-        <input type="text" class="form-control" id="text"
-                                                placeholder="New Batch Group Name" name="name">
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Batch Groups</h1>
     </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Talk Count</th>
+                        <th>Skip Consensus</th>
+                        <th>Talk Consensuses</th>
+                        <th>Locked</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for g in groups %}
+                    <tr>
+                        <td>{{g.id}}</td>
+                        <td class="name" data-id="{{g.id}}">{{g.name}}</td>
+                        <td>{{g.talk_count}}</td>
+                        <td>{{g.skip_consensus}}</td>
+                        <td>{{g.talk_consensus|join(', ')}}</td>
+                        <td data-id="{{g.id}}">
+                            {%if g.locked%}
+                                {{locked_button|safe}}
+                            {%else%}
+                                {{unlocked_button|safe}}
+                            {%endif%}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Add Batch Group</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="text" class="form-label">Batch Group Name</label>
+                <input type="text" class="form-control" id="text" placeholder="New Batch Group Name" name="name">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
 
 <script type="underscore/template" id="locked_button">
 {{locked_button|safe}}
@@ -66,7 +85,7 @@
 
 <script type="underscore/template" id="name_edit">
     <form method="POST" target="<%=id%>/">
-        <input type="text" value="<%=val%>">
+        <input type="text" class="form-control form-control-sm" value="<%=val%>">
     </form>
 </script>
 

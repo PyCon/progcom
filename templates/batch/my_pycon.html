@@ -1,20 +1,31 @@
 {%extends "base.html"%}
 {%block body %}
-<h4>Your PyCon</h4>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th data-column="batchgroup">Batch Group</th>
-            <th data-column="id">Id</th>
-            <th data-column="title">Title</th>
-            <th data-column="author_names">Author Names</th>
-            <th data-column="consensus">Proposal Consensus</th>
-            <th data-column="accepted">Accepted</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Your PyCon</h1>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th data-column="batchgroup">Batch Group</th>
+                        <th data-column="id">Id</th>
+                        <th data-column="title">Title</th>
+                        <th data-column="author_names">Author Names</th>
+                        <th data-column="consensus">Proposal Consensus</th>
+                        <th data-column="accepted">Accepted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {%endblock body%}
 {%block extrajs%}
 <script type="underscore/template" id="table_row">
@@ -26,11 +37,11 @@
         <td><%=e.author_names%></td>
         <td><%=e.consensus%></td>
         <td><%if(e.accepted === null){ %>
-                Undecided
+                <span class="badge bg-secondary">Undecided</span>
             <% }else if(e.accepted){ %>
-                Accepted
+                <span class="badge bg-success">Accepted</span>
             <% }else if(e.accepted == false){ %>
-                Declined
+                <span class="badge bg-danger">Declined</span>
             <% } %>
     </tr>
 </script>

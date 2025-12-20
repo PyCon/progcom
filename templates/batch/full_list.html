@@ -1,25 +1,36 @@
 {%extends "base.html"%}
 {%block body %}
-<h4>Batch Review Groups</h4>
-<table class="table table-hover table-condensed">
-    <thead>
-        <tr>
-            <th data-column="batchgroup">Batch Group</th>
-            <th data-column="id" class="warning">Id</th>
-            <th data-column="title">Title</th>
-            <th data-column="author_names">Author Names</th>
-            <th data-column="progcom_member">Program Committee Member</th>
-            <th data-column="accepted">Accepted</th>
-            <th data-column="consensus" data-reverse="1">Consensus</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Batch Review Groups</h1>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th data-column="batchgroup">Batch Group</th>
+                        <th data-column="id" class="table-warning">Id</th>
+                        <th data-column="title">Title</th>
+                        <th data-column="author_names">Author Names</th>
+                        <th data-column="progcom_member">Program Committee Member</th>
+                        <th data-column="accepted">Accepted</th>
+                        <th data-column="consensus" data-reverse="1">Consensus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {%endblock body%}
 {%block extrajs%}
 <script type="underscore/template" id="table_row">
-<tr <%if(e.accepted){ %>class="success"<% }else if(e.accepted === false){ %>class="active" <% } %>   >
+<tr <%if(e.accepted){ %>class="table-success"<% }else if(e.accepted === false){ %>class="table-secondary" <% } %>>
         <td><% if(e.batch_id){ %>
             <a href="/batch/<%=e.batch_id%>/"><%=e.batchgroup%></a>
             <% } %>
@@ -29,13 +40,17 @@
         <td><%=e.author_names%></td>
         <td>
             <% if(e.progcom_member){ %>
-                <span class="glyphicon glyphicon-asterisk"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-warning" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                </svg>
             <% } %>
         <td>
             <% if(e.accepted === null){ %>
-                Undecided
+                <span class="badge bg-secondary">Undecided</span>
+            <% }else if(e.accepted){ %>
+                <span class="badge bg-success">Accepted</span>
             <% }else{ %>
-                <%=e.accepted?"Accepted":"Declined"%>
+                <span class="badge bg-danger">Declined</span>
             <% } %>
         </td>
         <td>

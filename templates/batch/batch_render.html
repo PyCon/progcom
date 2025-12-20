@@ -1,23 +1,25 @@
 {% macro batch_discussion(msgs, locked=False) %}
-        <div class="panel panel-default" id="batch-messages">
-            <div class="panel-heading">
-                <h3 class="panel-title">Messages</h3>
+        <div class="card mb-4" id="batch-messages">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Messages</h5>
             </div>
-            <table class="table table-striped">
-                {% for m in msgs %}
-                    <tr><th>{{m.display_name}}</th><th>{{m.created|date}}</th></tr>
-                    <tr><td colspan="2">{{m.body}}</td></tr>
-                {% endfor %}
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    {% for m in msgs %}
+                        <tr><th>{{m.display_name}}</th><td class="text-muted small">{{m.created|date}}</td></tr>
+                        <tr><td colspan="2">{{m.body}}</td></tr>
+                    {% endfor %}
+                </table>
+            </div>
             {% if not locked %}
-            <div class="panel-body">
+            <div class="card-body border-top">
                 <form method="POST" action="comment/" id="add-comment">
-                    <div class="form-group">
-                        <label for="comment">Add Comment</label>
-                        <textarea type="" class="form-control" id="comment" placeholder="Internal Comment" name="comment"></textarea>
-                        <p class="help-block">Please be both kind and succinct with your comments.</p>
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Add Comment</label>
+                        <textarea class="form-control" id="comment" placeholder="Internal Comment" name="comment" rows="3"></textarea>
+                        <div class="form-text">Please be both kind and succinct with your comments.</div>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-secondary">Submit</button>
                 </form>
             </div>
             {%endif%}

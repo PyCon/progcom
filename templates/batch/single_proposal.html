@@ -2,34 +2,39 @@
 {%import "proposal_render.html" as pr%}
 
 {%block body %}
+<div class="row mb-4">
+    <div class="col-12">
+        {{pr.proposal_render(proposal)}}
+    </div>
+</div>
 
-{{pr.proposal_render(proposal)}}
-<hr>
-<h2>Screening Discussion</h2>
+<hr class="my-4">
+
+<h4 class="mb-3">Screening Discussion</h4>
 {% for msg in discussion%}
-<div class="panel panel-default">
-    <div class="panel-heading">
+<div class="card mb-3">
+    <div class="card-header">
         {% if msg.name %}
         {{msg.name}}
         {% else %}
         {{msg.display_name}}
         {% endif %}
     </div>
-    <div class="panel-body">
+    <div class="card-body">
         {{msg.body}}
     </div>
     {% if msg.name %}
-    <div class="panel-footer">
-        <strong> Message From Author</strong>
+    <div class="card-footer bg-info-subtle">
+        <strong>Message From Author</strong>
     </div>
     {% endif %}
     {% if msg.feedback %}
-    <div class="panel-footer">
+    <div class="card-footer bg-warning-subtle">
         <strong>Message To Author</strong>
     </div>
     {% endif %}
 </div>
 {% else %}
-<p>No discussion in Screening</p>
+<p class="text-muted">No discussion in Screening</p>
 {% endfor %}
 {%endblock body%}

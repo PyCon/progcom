@@ -1,24 +1,44 @@
 {%extends "base.html"%}
 {%block body %}
-<p>This website is for members of the PyCon program committee. If you are
-interested in joining, please 
-<a href="https://mail.python.org/mailman/listinfo/pycon-pc">join the mailing list</a>!</p>
-<h3>Please use the same email address you use on us.pycon.org!</h3>
-<form method="POST">
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-soft">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">Create Account</h2>
+                <p class="text-muted text-center mb-3">This website is for members of the PyCon program committee. If you are
+                interested in joining, please
+                <a href="https://mail.python.org/mailman/listinfo/pycon-pc">join the mailing list</a>!</p>
+
+                <div class="alert alert-info mb-4">
+                    <strong>Important:</strong> Please use the same email address you use on us.pycon.org!
+                </div>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name"
+                            name="name" placeholder="Enter your full name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pw" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="pw"
+                            name="pw" placeholder="Choose a password">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted">Already have an account?</span>
+                    <a href="{{url_for('login')}}">Log in</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name"
-            name="name" placeholder="Full Name">
-    </div>
-    <div class="form-group">
-        <label for="pw">Password</label>
-        <input type="password" class="form-control" id="pw"
-            name="pw" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-default">Submit</button>
-</form>
+</div>
 {%endblock body%}

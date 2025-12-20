@@ -1,9 +1,9 @@
 {%macro vote_display(vote) %}
 {% if vote == 2 %}
-<span class="label label-success"><span class="glyphicon glyphicon-ok"></span></span>
+<span class="badge bg-success">✓</span>
 {% elif vote == 1%}
-<span class="label label-warning"><span class="glyphicon glyphicon-warning-sign"></span></span>
+<span class="badge bg-warning text-dark">~</span>
 {% else %}
-<span class="label label-danger"><span class="glyphicon glyphicon-remove"></span></span>
+<span class="badge bg-danger">✗</span>
 {% endif%}
 {%endmacro%}

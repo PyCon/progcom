@@ -1,13 +1,28 @@
 {%extends "base.html"%}
 {%block body %}
-<p>If you would like a one-click login email sent, please enter your email address below. This
-will also allow you to reset your password.</p>
-<form method="POST">
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" 
-            name="email" placeholder="Email">
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-soft">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">Reset Password</h2>
+                <p class="text-muted text-center mb-4">Enter your email address and we'll send you a one-click login link that will also allow you to reset your password.</p>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email"
+                            name="email" placeholder="Enter your email">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Send Login Email</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a href="{{url_for('login')}}">Back to login</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-default">Request Login Email</button>
-</form>
+</div>
 {%endblock body%}

@@ -1,79 +1,154 @@
 {%extends "base.html"%}
 {%block body %}
-<div class="col-md-12">
-    <h4>Votes Per Day</h4>
-    <div id="votes-when">
-        <svg></svg>
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-0">Screening Statistics</h1>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <h4>Overall Vote Coverage</h4>
-        <table class="table table-striped table-condensed">
-            <thead><tr><th>Votes</th><th>Proposals</th></tr></thead>
-            <tbody>
-                {% for p in progress %}
-                <tr>
-                    <td>{{p.vote_count}}</td>
-                    <td>{{p.quantity}}</td>
-                </tr>
-                {% endfor %}
-                <tr><th>Total</th><th>{{total_proposals}}</th></tr>
-            </tbody>
-        </table>
-    <h4>Nominations</h4>
-    <table class="table table-striped table-condensed">
-        <thead><tr><th>Nominations</th><th>Proposals</th></tr></thead>
-        <tbody>
-            {% for k,v in nomination_density %}
-            <tr><td>{{k}}</td><td>{{v}}</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h4>Active Discussions Past 7 Days</h4>
-    <table class="table table-striped table-condensed">
-        <thead><tr><th>Discussion</th><th>New Messages</th></tr></thead>
-        <tbody>
-            {% for d in active_discussions %}
-            <tr>
-                <td><a href="{{url_for('screening', id=d.id)}}">{{d.title}}</a>
-                </td><td>{{d.count}}</td></tr>
-                {% endfor %}
-        </tbody>
-    </table>
 
-    </div>
-    <div class="col-md-6">
-        <h4>Vote Coverage By Week Added</h4>
-        <div id="votes-progress">
-            <svg></svg>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Votes Per Day</h5>
+            </div>
+            <div class="card-body">
+                <div id="votes-when">
+                    <svg></svg>
+                </div>
+            </div>
         </div>
-
-
-    <h4>Votes Per Committee Member</h4>
-    <table class="table table-striped table-condensed">
-        <thead><tr><th>Voter</th><th>Votes</th><th>% Coverage</th></tr></thead>
-        <tbody>
-            {% for user in users%}
-            <tr><td>{{user.display_name}}</td>
-                <td>{{user.votes}}</td>
-                <td>{{"%.2f"|format((user.votes + 0.001)/(total_proposals-user.proposals_made+0.001)*100)}}</td>
-            </tr>
-            {% endfor %}
-            <tr><th>Total</th><th>{{total_votes}}</th><td></td></tr>
-        </tbody>
-    </table>
+    </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Overall Vote Coverage</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr><th>Votes</th><th>Proposals</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for p in progress %}
+                        <tr>
+                            <td>{{p.vote_count}}</td>
+                            <td>{{p.quantity}}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="table-secondary fw-bold">
+                            <td>Total</td>
+                            <td>{{total_proposals}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Vote Coverage By Week Added</h5>
+            </div>
+            <div class="card-body">
+                <div id="votes-progress">
+                    <svg></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Nominations</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr><th>Nominations</th><th>Proposals</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for k,v in nomination_density %}
+                        <tr><td>{{k}}</td><td>{{v}}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Active Discussions (Past 7 Days)</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr><th>Discussion</th><th>Messages</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for d in active_discussions %}
+                        <tr>
+                            <td><a href="{{url_for('screening', id=d.id)}}">{{d.title}}</a></td>
+                            <td><span class="badge bg-primary">{{d.count}}</span></td>
+                        </tr>
+                        {% endfor %}
+                        {% if not active_discussions %}
+                        <tr><td colspan="2" class="text-muted text-center py-3">No active discussions</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Votes Per Committee Member</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead>
+                        <tr><th>Voter</th><th>Votes</th><th>Coverage</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users%}
+                        <tr>
+                            <td>{{user.display_name}}</td>
+                            <td>{{user.votes}}</td>
+                            <td>{{"%.1f"|format((user.votes + 0.001)/(total_proposals-user.proposals_made+0.001)*100)}}%</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="table-secondary fw-bold">
+                            <td>Total</td>
+                            <td>{{total_votes}}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {%endblock body%}
+
 {%block extracss%}
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css">
 <style type="text/css">
 #votes-when svg {height:200px;}
 #votes-progress svg {height:200px; width:100%;}
 </style>
 {%endblock%}
+
 {%block extrajs%}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.8/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
