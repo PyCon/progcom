@@ -3,7 +3,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libblas-dev liblapack-dev libatlas-base-dev gfortran \
+    libblas-dev liblapack-dev gfortran \
     gcc libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
