@@ -261,7 +261,7 @@ def batch_vote(id):
     if request.user.email in group.author_emails or group.locked:
         abort(404)
 
-    accept = request.values.getlist('accept', int)
+    accept = request.values.getlist('accept')
 
     l.vote_group(id, request.user.id, accept)
     return redirect(url_for('batch_view', id=id))

@@ -583,7 +583,7 @@ def vote_group(batchgroup, voter, accept):
         pass
     q = '''UPDATE batchvotes SET accept=%s, updated_on=now()
             WHERE batchgroup=%s AND voter=%s'''
-    execute(q, [[accept, batchgroup, voter]])
+    execute(q, accept, batchgroup, voter)
 
 def raw_list_groups():
     rv = fetchall('''SELECT batchgroups.*,

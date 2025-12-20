@@ -70,7 +70,7 @@ CREATE TRIGGER batch_change_trigger AFTER INSERT OR UPDATE
 CREATE TABLE batchvotes (
     batchgroup      BIGINT REFERENCES batchgroups,
     voter           BIGINT REFERENCES users,
-    accept          BIGINT[],
+    accept          VARCHAR(32)[],
     created_on      TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_on      TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE(voter, batchgroup)
