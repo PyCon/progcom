@@ -9,10 +9,11 @@ import re
 
 import pandas as pd
 import itsdangerous
-import sendgrid
+import smtplib
+from email.mime.text import MIMEText
 
 import bcrypt
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
 from psycopg2.extras import Json
 from jinja2 import Environment, FileSystemLoader
@@ -36,7 +37,11 @@ def l(key, **data):
 """
 Some DB wrapper stuff
 """
-_e = create_engine(os.environ['DATABASE_URL'])
+# SQLAlchemy 2.0 requires 'postgresql://' instead of 'postgres://'
+_database_url = os.environ['DATABASE_URL']
+if _database_url.startswith('postgres://'):
+    _database_url = _database_url.replace('postgres://', 'postgresql://', 1)
+_e = create_engine(_database_url)
 
 __TUPLE_CACHE = {}
 def build_tuple(keys):
@@ -46,27 +51,66 @@ def build_tuple(keys):
         __TUPLE_CACHE[keys] = namedtuple(name, keys)
     return __TUPLE_CACHE[keys]
 
-def execute(*args, **kwargs):
-    _e.execute(*args, **kwargs)
+def _convert_query(query, params):
+    """Convert %s style query to :p0, :p1 style for SQLAlchemy 2.0."""
+    if not params:
+        return text(query), {}
 
-def fetchone(*args, **kwargs):
-    result = _e.execute(*args, **kwargs)
-    T = build_tuple(result.keys())
-    result = result.fetchone()
-    if not result:
-        return None
-    return T(*result)
+    # Handle list of tuples for executemany-style operations
+    if isinstance(params, list) and params and isinstance(params[0], (list, tuple)):
+        # For batch operations, return as-is for manual iteration
+        return query, params
 
-def fetchall(*args, **kwargs):
-    result = _e.execute(*args, **kwargs)
-    T = build_tuple(result.keys())
-    rv = []
-    for row in result.fetchall():
-        rv.append(T(*row))
-    return rv
+    # Convert single tuple/list of params
+    if isinstance(params, (list, tuple)):
+        new_query = query
+        param_dict = {}
+        for i, param in enumerate(params):
+            new_query = new_query.replace('%s', f':p{i}', 1)
+            param_dict[f'p{i}'] = param
+        return text(new_query), param_dict
 
-def scalar(*args, **kwargs):
-    return _e.scalar(*args, **kwargs)
+    return text(query), params
+
+def execute(query, *args):
+    with _e.connect() as conn:
+        converted_query, params = _convert_query(query, args[0] if args else None)
+        # Handle batch operations (list of tuples)
+        if isinstance(params, list) and params and isinstance(params[0], (list, tuple)):
+            for param_set in params:
+                q, p = _convert_query(query, param_set)
+                conn.execute(q, p)
+        else:
+            conn.execute(converted_query, params)
+        conn.commit()
+
+def fetchone(query, *args):
+    with _e.connect() as conn:
+        converted_query, params = _convert_query(query, args)
+        result = conn.execute(converted_query, params)
+        T = build_tuple(result.keys())
+        row = result.fetchone()
+        if not row:
+            return None
+        return T(*row)
+
+def fetchall(query, *args):
+    with _e.connect() as conn:
+        converted_query, params = _convert_query(query, args)
+        result = conn.execute(converted_query, params)
+        T = build_tuple(result.keys())
+        rv = []
+        for row in result.fetchall():
+            rv.append(T(*row))
+        return rv
+
+def scalar(query, *args):
+    with _e.connect() as conn:
+        converted_query, params = _convert_query(query, args)
+        result = conn.execute(converted_query, params)
+        row = result.fetchone()
+        conn.commit()
+        return row[0] if row else None
 
 """
 User management
@@ -76,8 +120,10 @@ def _mangle_pw(pw, salt=None):
     if not salt:
         salt = bcrypt.gensalt(rounds=_SALT_ROUNDS)
     else:
-        salt = salt.encode('utf-8')
-    return bcrypt.hashpw(pw.encode('utf-8'), salt)
+        if isinstance(salt, str):
+            salt = salt.encode('utf-8')
+    hashed = bcrypt.hashpw(pw.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
 
 def add_user(email, display_name, pw):
     q = '''INSERT INTO users (email, display_name, pw)
@@ -380,11 +426,13 @@ def get_votes_by_day():
             date_trunc('day', updated_on) AS day
             FROM votes GROUP BY day'''
     results = {x.day.date().isoformat():x.count for x in fetchall(q)}
+    if not results:
+        return []
     full = pd.Series(results)
     full.index = pd.DatetimeIndex(full.index)
     full = full.reindex(pd.date_range(min(full.index),
                                         max(full.index)), fill_value=0)
-    return [{'count':v, 'day':_js_time(k)} for k,v in full.iteritems()]
+    return [{'count':v, 'day':_js_time(k)} for k,v in full.items()]
 
 def coverage_by_age():
     q = '''SELECT COUNT(*) as total,
@@ -400,12 +448,12 @@ def coverage_by_age():
     df = pd.DataFrame(result).fillna(0)
     df.index = pd.DatetimeIndex(df.index)
 
-    result = {votes:series for votes, series in df.iteritems()}
+    result = {votes:series for votes, series in df.items()}
     rv = []
-    for key, series in result.iteritems():
+    for key, series in result.items():
         rv.append({'key':key,
             'values': [{'week':_js_time(k), 'votes':v}
-                        for k,v in series.iteritems()]})
+                        for k,v in series.items()]})
     return rv
 
 def added_last_week():
@@ -613,11 +661,11 @@ def get_batch_coverage():
                 groups[vote.batchgroup][id] = 0
             groups[vote.batchgroup][id] += 1
 
-    for bg, batch in groups.iteritems():
+    for bg, batch in groups.items():
         total = voter_count[bg]
         if not total:
             continue
-        batch.update({k:int(100*float(v)/total) for k,v in batch.iteritems()})
+        batch.update({k:int(100*float(v)/total) for k,v in batch.items()})
     return groups
 
 def get_my_pycon(user):
@@ -699,9 +747,36 @@ def mark_batch_read(batch, user):
 Discussion
 """
 _USER_FB_ITSD = itsdangerous.URLSafeSerializer(os.environ['ITSD_KEY'])
-_SENDGRID = sendgrid.SendGridAPIClient(apikey=os.environ['SENDGRID_API_KEY'])
-_EMAIL_FROM = os.environ['EMAIL_FROM']
-_WEB_HOST = os.environ['WEB_HOST']
+_EMAIL_FROM = "pycon-program-committee@python.org"
+_WEB_HOST = "progcom2.philippe.gg"
+
+# SMTP Configuration (AWS SES compatible)
+_SMTP_HOST = os.environ.get('SMTP_HOST', 'email-smtp.us-east-1.amazonaws.com')
+_SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
+_SMTP_USER = os.environ.get('SMTP_USER')
+_SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
+_SMTP_USE_TLS = os.environ.get('SMTP_USE_TLS', 'true').lower() == 'true'
+
+def _send_email(to_addrs, subject, body, cc=None, from_name=None):
+    """Send email via SMTP (AWS SES compatible)."""
+    from_addr = _EMAIL_FROM
+    msg = MIMEText(body, 'plain')
+    msg['Subject'] = subject
+    msg['From'] = f"{from_name} <{from_addr}>" if from_name else from_addr
+    msg['To'] = ', '.join(to_addrs) if isinstance(to_addrs, list) else to_addrs
+    if cc:
+        msg['Cc'] = ', '.join(cc) if isinstance(cc, list) else cc
+
+    all_recipients = list(to_addrs) if isinstance(to_addrs, list) else [to_addrs]
+    if cc:
+        all_recipients.extend(cc if isinstance(cc, list) else [cc])
+
+    with smtplib.SMTP(_SMTP_HOST, _SMTP_PORT) as server:
+        if _SMTP_USE_TLS:
+            server.starttls()
+        if _SMTP_USER and _SMTP_PASSWORD:
+            server.login(_SMTP_USER, _SMTP_PASSWORD)
+        server.sendmail(from_addr, all_recipients, msg.as_string())
 
 _TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'templates')
 _JINJA = Environment(loader=FileSystemLoader(_TEMPLATE_PATH))
@@ -739,31 +814,15 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
 
     if feedback:
         full_proposal = get_proposal(proposal)
-        email = _JINJA.get_template('email/feedback_notice.txt')
+        email_template = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
             url = 'https://{}/feedback/{}'.format(_WEB_HOST, key)
             edit_url = 'https://us.pycon.org/2021/proposals/{}/'.format(proposal)
-            rendered = email.render(proposal=full_proposal, body=body,
+            rendered = email_template.render(proposal=full_proposal, body=body,
                                 url=url, edit_url=edit_url)
-            msg = {
-                "personalizations": [
-                    {
-                        "to": [{"email": to}],
-                        "subject": 'Feedback on Your PyCon Talk Proposal',
-                    }
-                ],
-                "from": {
-                    "email": _EMAIL_FROM,
-                    "name": "PyCon Program Committee"
-                },
-                "content": [
-                    {
-                        "type": "text/plain",
-                        "value": rendered,
-                    }
-                ]
-            }
-            l('filter_email_sent', api_result=_SENDGRID.client.mail.send.post(request_body=msg).body, to=to)
+            _send_email(to, 'Feedback on Your PyCon Talk Proposal', rendered,
+                       from_name="PyCon Program Committee")
+            l('filter_email_sent', to=to)
 
 
 def mark_read(userid, proposal):
@@ -812,31 +871,13 @@ def send_login_email(email):
         l('failed_pw_reset_request', email=email)
         return False
 
-    body = _JINJA.get_template('email/login_email.txt')
+    body_template = _JINJA.get_template('email/login_email.txt')
     key = _LOGIN_EMAIL_ITSD.dumps(user.id)
     url = 'https://{}/user/login/{}/'.format(_WEB_HOST, key)
-    body = body.render(url=url)
+    body = body_template.render(url=url)
 
-    msg = {
-        "personalizations": [
-            {
-                "to": [{"email": user.email}],
-                "subject": 'PyCon Program Committee Password Reset',
-            }
-        ],
-        "from": {
-            "email": _EMAIL_FROM,
-            "name": "PyCon Progamming Committee"
-        },
-        "content": [
-            {
-                "type": "text/plain",
-                "value": body,
-            }
-        ]
-    }
-
-    _SENDGRID.client.mail.send.post(request_body=msg)
+    _send_email(user.email, 'PyCon Program Committee Password Reset', body,
+               from_name="PyCon Programming Committee")
     l('successful_pw_reset_request', email=email, id=user.id)
     return True
 
@@ -852,85 +893,29 @@ def email_approved(id):
     user = get_user(id)
 
     url = 'https://{}'.format(_WEB_HOST)
-    msg = {
-        "personalizations": [
-            {
-                "to": [{"email": user.email}],
-                "subject": 'Welcome to the Program Committee Web App!',
-                "cc": [{"email": x} for x in _ADMIN_EMAILS],
-            }
-        ],
-        "from": {
-            "email": _EMAIL_FROM,
-            "name": "PyCon Progamming Committee"
-        },
-        "content": [
-            {
-                "type": "text/plain",
-                "value": _JINJA.get_template('email/welcome_user.txt').render(url=url),
-            }
-        ]
-    }
-
-    _SENDGRID.client.mail.send.post(request_body=msg)
+    body = _JINJA.get_template('email/welcome_user.txt').render(url=url)
+    _send_email(user.email, 'Welcome to the Program Committee Web App!', body,
+               cc=list(_ADMIN_EMAILS), from_name="PyCon Programming Committee")
 
 def email_new_user_pending(email, name):
     body = _JINJA.get_template('email/new_user_pending.txt').render(name=name,
                                                                     email=email,
                                                                     web_host=_WEB_HOST,)
-
-    msg = {
-        "personalizations": [
-            {
-                "to": [{"email": x} for x in _ADMIN_EMAILS],
-                "subject": 'New Progcom User',
-            }
-        ],
-        "from": {
-            "email": _EMAIL_FROM,
-            "name": "PyCon Program Committee Robot"
-        },
-        "content": [
-            {
-                "type": "text/plain",
-                "value": body,
-            }
-        ]
-    }
-
-    _SENDGRID.client.mail.send.post(request_body=msg)
+    _send_email(list(_ADMIN_EMAILS), 'New Progcom User', body,
+               from_name="PyCon Program Committee Robot")
 
 def send_weekly_update():
     if datetime.datetime.now().isoweekday() != 2:
         return
-    body = _JINJA.get_template('email/weekly_email.txt')
-    body = body.render(new_proposal_count=added_last_week(),
+    body_template = _JINJA.get_template('email/weekly_email.txt')
+    body = body_template.render(new_proposal_count=added_last_week(),
                        updated_proposal_count=updated_last_week(),
                        votes_last_week=votes_last_week(),
                        active_discussions=active_discussions(),
                        screening_progress=screening_progress(),
                        web_host=_WEB_HOST,)
-
-    msg = {
-        "personalizations": [
-            {
-                "to": [{"email": x} for x in _UPDATE_EMAILS],
-                "subject": 'Weekly Program Committee Status',
-            }
-        ],
-        "from": {
-            "email": _EMAIL_FROM,
-            "name": "PyCon Program Committee Robot"
-        },
-        "content": [
-            {
-                "type": "text/plain",
-                "value": body,
-            }
-        ]
-    }
-
-    _SENDGRID.client.mail.send.post(request_body=msg)
+    _send_email(list(_UPDATE_EMAILS), 'Weekly Program Committee Status', body,
+               from_name="PyCon Program Committee Robot")
 
 
 """
@@ -976,7 +961,7 @@ def _get_raw_docs():
     useful_words = set(k for k,v in all_words.items() if v > 1)
 
     ids, words = zip(*{k:[x for x in v if x in useful_words]
-                                for k,v in rv.iteritems()}.items())
+                                for k,v in rv.items()}.items())
     return ids, words
 
 def get_proposals_auto_grouped(topics_count=100, threshold=.5):
@@ -1106,38 +1091,22 @@ def send_emails():
             if not email or '@' not in email:
                 continue
             if (p.id, email) in already_sent:
-                print 'ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)
+                print('ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email))
                 continue
             if not p.accepted:
                 if (p.id, email) in already_declined:
-                    print 'ALREADY DECLINED PROPOSAL #{} TO {}'.format(p.id, email)
+                    print('ALREADY DECLINED PROPOSAL #{} TO {}'.format(p.id, email))
                     continue
-                print "Declined: %s:%s" % (p.id, email)
+                print("Declined: %s:%s" % (p.id, email))
                 text = decline.render(name=name, title=p.data['title'])
-                msg = {
-                    "personalizations": [
-                        {
-                            "to": [{"email": email}],
-                            "subject": u'PyCon 2021: Proposal Decision -- '+p.data['title'],
-                        }
-                    ],
-                    "from": {
-                        "email": _EMAIL_FROM,
-                        "name": "PyCon Program Committee"
-                    },
-                    "content": [
-                        {
-                            "type": "text/plain",
-                            "value": text,
-                        }
-                    ]
-                }
 
                 q = '''INSERT INTO declined (proposal, email)
                         VALUES (%s, %s) RETURNING id'''
                 _ = scalar(q, p.id, email)
 
-                print _SENDGRID.client.mail.send.post(request_body=msg).body
+                _send_email(email, 'PyCon 2021: Proposal Decision -- '+p.data['title'], text,
+                           from_name="PyCon Program Committee")
+                print("Decline email sent")
                 declined +=1
                 continue
             q = '''INSERT INTO confirmations (proposal, email)
@@ -1146,28 +1115,12 @@ def send_emails():
             key = _CONFIRMATION_ITSD.dumps(id)
             url = 'https://{}/confirmation/{}/'.format(_WEB_HOST, key)
             text = accepted.render(name=name, title=p.data['title'], url=url)
-            msg = {
-                "personalizations": [
-                    {
-                        "to": [{"email": email}],
-                        "subject": u'PyCon 2021: Talk Acceptance -- '+p.data['title'],
-                    }
-                ],
-                "from": {
-                    "email": _EMAIL_FROM,
-                    "name": "PyCon Program Committee"
-                },
-                "content": [
-                    {
-                        "type": "text/plain",
-                        "value": text,
-                    }
-                ]
-            }
 
-            print "Accepted: %s:%s" % (p.id, email)
-            print _SENDGRID.client.mail.send.post(request_body=msg).body
+            print("Accepted: %s:%s" % (p.id, email))
+            _send_email(email, 'PyCon 2021: Talk Acceptance -- '+p.data['title'], text,
+                       from_name="PyCon Program Committee")
+            print("Accept email sent")
 
             acceptance +=1
-    print 'Declined: {}'.format(declined)
-    print 'Accepted: {}'.format(acceptance)
+    print('Declined: {}'.format(declined))
+    print('Accepted: {}'.format(acceptance))

@@ -7,11 +7,10 @@ from collections import defaultdict
 
 from flask import (Flask, render_template, request, session, url_for, redirect,
                     flash, abort, jsonify)
-from jinja2 import Markup
+from markupsafe import Markup
 import bleach
 import markdown2 as markdown
 import dateutil.parser
-from raven.contrib.flask import Sentry
 
 
 import logic as l
@@ -23,9 +22,6 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 
 app.register_blueprint(bp_admin, url_prefix='/admin')
 
-if 'SENTRY_DSN' in os.environ:
-    sentry = Sentry(app)
-    print 'Sentry'
 
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
 app.config.THIS_IS_BATCH = THIS_IS_BATCH
@@ -40,15 +36,15 @@ _OBSERVER_EMAILS = set(json.loads(os.environ['OBSERVER_EMAILS']))
 app.config.OBSERVER_EMAILS = _OBSERVER_EMAILS
 
 if THIS_IS_BATCH:
-    print 'THIS IS BATCH'
+    print('THIS IS BATCH')
 else:
-    print 'This is Screening!'
+    print('This is Screening!')
 
 @app.template_filter('date')
 def date_filter(d):
     if not d:
         return ''
-    if isinstance(d, (str, unicode)):
+    if isinstance(d, str):
         d = dateutil.parser.parse(d)
     return d.strftime('%B %-d, %-I:%M %p')
 
@@ -61,11 +57,13 @@ def set_nofollow(attrs, new=False):
     return attrs
 
 
-__ALLOWED_TAGS =['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'hr', 'pre']
+_BLEACH_DEFAULT_TAGS = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'strong', 'ul']
+__ALLOWED_TAGS = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'hr', 'pre']
 @app.template_filter('markdown')
 def markdown_filter(s):
     raw = bleach.clean(markdown.markdown('' if not s else s),
-                    tags=bleach.ALLOWED_TAGS+__ALLOWED_TAGS)
+                    tags=_BLEACH_DEFAULT_TAGS+__ALLOWED_TAGS)
     # raw = bleach.linkify(raw, callbacks=[set_nofollow])
     raw = bleach.linkify(raw)
     return Markup(raw)

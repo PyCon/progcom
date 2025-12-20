@@ -1,0 +1,34 @@
+[project]
+name = "progcom2"
+version = "1.0.0"
+description = "PyCon Program Committee Proposal Review System"
+requires-python = ">=3.13"
+dependencies = [
+    "Flask>=3.0.0",
+    "SQLAlchemy>=2.0.0",
+    "bcrypt>=4.1.0",
+    "psycopg2-binary>=2.9.0",
+    "itsdangerous>=2.1.0",
+    "bleach>=6.1.0",
+    "markdown2>=2.4.0",
+    "simplejson>=3.19.0",
+    "pandas>=2.1.0",
+    "numpy>=1.26.0",
+    "gensim>=4.3.0",
+    "python-dateutil>=2.8.0",
+    "requests>=2.31.0",
+    "pytz>=2024.1",
+    "gevent>=24.2.0",
+    "gunicorn>=21.0.0",
+    "markupsafe>=2.1.0",
+    "pandas-stubs~=2.3.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+]
+
+[tool.uv]
+package = false

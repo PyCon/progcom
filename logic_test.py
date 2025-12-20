@@ -2,26 +2,29 @@ import os.path
 import random
 
 import pytest
-import mock
+from unittest import mock
 
 import logic as l
 
-l._S_OLD = l._SENDGRID
-l._SENDGRID = mock.Mock()
+# Mock the email sending function to prevent actual emails during tests
+l._send_email = mock.Mock()
 
 
 @pytest.fixture(autouse=True)
 def transact():
     """Since the whole point of bcrypt is to be slow, it helps to dial the knob
         down while testing."""
+    from sqlalchemy import text
     l._SALT_ROUNDS=4
     e = l._e
-    q = "SELECT tablename FROM pg_tables WHERE schemaname='public'"
-    for table in e.execute(q).fetchall():
-        table = table[0]
-        e.execute('DROP TABLE IF EXISTS %s CASCADE' % table)
-    sql = open(os.path.join(os.path.dirname(__file__), 'tables.sql')).read()
-    e.execute(sql)   
+    with e.connect() as conn:
+        q = "SELECT tablename FROM pg_tables WHERE schemaname='public'"
+        for table in conn.execute(text(q)).fetchall():
+            table_name = table[0]
+            conn.execute(text(f'DROP TABLE IF EXISTS {table_name} CASCADE'))
+        sql = open(os.path.join(os.path.dirname(__file__), 'tables.sql')).read()
+        conn.execute(text(sql))
+        conn.commit()   
 
 def test_pw():
     pw = [u'blah blah blah', 'blah blah blah',

@@ -27,7 +27,7 @@ def add_batchgroup():
     name = request.values.get('name')
     id = l.create_group(request.values.get('name'), None)
     l.l('add_batchgroup', uid=request.user.id, name = name, id=id)
-    if request.is_xhr:
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify(groups=l.raw_list_groups())
     return redirect(url_for('admin.list_batchgroups'))
 
@@ -36,7 +36,7 @@ def rename_batch_group(id):
     name = request.values.get('name')
     l.l('rename_batch_group', uid=request.user.id, name=name, gid=id)
     l.rename_batch_group(id,name)
-    if request.is_xhr:
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify(groups=l.raw_list_groups())
     return redirect(url_for('admin.list_batchgroups'))
 

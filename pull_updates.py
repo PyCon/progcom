@@ -7,7 +7,6 @@ import sys
 
 import pytz
 import requests
-from raven import Client
 from simplejson import JSONDecodeError
 from requests.exceptions import RequestException
 
@@ -22,13 +21,13 @@ def api_call(uri):
     body = ''
 
     timestamp = timegm(datetime.now(tz=pytz.UTC).timetuple())
-    base_string = unicode(''.join((
+    base_string = ''.join((
         API_SECRET,
-        unicode(timestamp),
+        str(timestamp),
         method.upper(),
         uri,
         body,
-        )))
+    ))
 
     headers = {
             'X-API-Key': str(API_KEY),
@@ -38,7 +37,7 @@ def api_call(uri):
     url = 'http://{}{}'.format(API_HOST, uri)
     try:
         return requests.get(url, headers=headers).json()
-    except JSONDecodeError, RequestException:
+    except (JSONDecodeError, RequestException):
         raise
 
 """
@@ -78,11 +77,6 @@ def main():
     for id in withdrawn:
         l.withdraw_proposal(id)
 
-raven_client = Client(os.environ['SENTRY_DSN'])
 if __name__ == '__main__':
-    try:
-        main()
-    except:
-        raven_client.captureException()
-        sys.exit(1)
+    main()
 
