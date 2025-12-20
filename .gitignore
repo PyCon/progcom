@@ -9,3 +9,4 @@ deploy.retry
 /.idea/
 /.claude/
 /.venv/
+*.DS_Store
