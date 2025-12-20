@@ -186,10 +186,11 @@ User State
 @app.route('/votes/')
 def show_votes():
     votes = l.get_my_votes(request.user.id)
-    votes = [x._replace(updated_on=l._js_time(x.updated_on)) for x in votes]
+    votes = [x._replace(updated_on=l._js_time(x.updated_on))._asdict() for x in votes]
     percent = l.get_vote_percentage(request.user.email, request.user.id)
+    standards = [s._asdict() for s in l.get_standards()]
     return render_template('my_votes.html', votes=votes, percent=percent,
-                            standards = l.get_standards())
+                            standards=standards)
 
 @app.route('/unread/')
 def show_unread():
@@ -307,7 +308,7 @@ def screening_stats():
                             active_discussions=active_discussions,
                             votes_when=votes_when)
 
-@app.route('/screening/<int:id>/')
+@app.route('/screening/<id>/')
 def screening(id):
     l.l('screening_view', uid=request.user.id, id=id)
     proposal = l.get_proposal(id)
@@ -335,7 +336,7 @@ def screening(id):
                             unread=unread,
                             percent=percent)
 
-@app.route('/screening/<int:id>/vote/', methods=['POST'])
+@app.route('/screening/<id>/vote/', methods=['POST'])
 def vote(id):
     standards = l.get_standards()
     scores = {}
@@ -348,7 +349,7 @@ def vote(id):
                             votes = l.get_votes(id),
                             existing_vote=l.get_user_vote(request.user.id, id))
 
-@app.route('/screening/<int:id>/comment/', methods=['POST'])
+@app.route('/screening/<id>/comment/', methods=['POST'])
 def comment(id):
     comment = request.values.get('comment').strip()
     if comment:
@@ -357,7 +358,7 @@ def comment(id):
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
-@app.route('/screening/<int:id>/feedback/', methods=['POST'])
+@app.route('/screening/<id>/feedback/', methods=['POST'])
 def feedback(id):
     if CUTOFF_FEEDBACK:
         abort(404)
@@ -368,14 +369,14 @@ def feedback(id):
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
-@app.route('/screening/<int:id>/mark_read/', methods=['POST'])
+@app.route('/screening/<id>/mark_read/', methods=['POST'])
 def mark_read(id):
     l.mark_read(request.user.id, id)
     return render_template('discussion_snippet.html',
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
-@app.route('/screening/<int:id>/mark_read/next/', methods=['POST'])
+@app.route('/screening/<id>/mark_read/next/', methods=['POST'])
 def mark_read_read_next(id):
     l.mark_read(request.user.id, id)
     unread = l.get_unread(request.user.id)

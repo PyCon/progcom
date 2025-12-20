@@ -74,13 +74,13 @@ def _convert_query(query, params):
 
 def execute(query, *args):
     with _e.connect() as conn:
-        converted_query, params = _convert_query(query, args[0] if args else None)
-        # Handle batch operations (list of tuples)
-        if isinstance(params, list) and params and isinstance(params[0], (list, tuple)):
-            for param_set in params:
+        # Handle batch operations (list of tuples passed as single arg)
+        if args and isinstance(args[0], list) and args[0] and isinstance(args[0][0], (list, tuple)):
+            for param_set in args[0]:
                 q, p = _convert_query(query, param_set)
                 conn.execute(q, p)
         else:
+            converted_query, params = _convert_query(query, args)
             conn.execute(converted_query, params)
         conn.commit()
 
@@ -312,7 +312,7 @@ def vote(voter, proposal, scores, nominate=False):
 
     q = '''UPDATE votes SET scores=%s, updated_on=now(), nominate=%s
             WHERE voter=%s AND proposal=%s RETURNING id'''
-    return scalar(q, [[json.dumps(scores), nominate, voter, proposal]])
+    return scalar(q, json.dumps(scores), nominate, voter, proposal)
 
 def get_user_vote(userid, proposal):
     q = '''SELECT * FROM votes WHERE

@@ -43,9 +43,16 @@ function nominate_status(){
 function vote_click(){
     var $this = $(this);
     $this.siblings('input').val($this.data().val);
-    $this.siblings().addClass('btn-default').removeClass('btn-success btn-warning btn-danger');
-    $this.addClass({'0':'btn-danger', '1':'btn-warning', '2': 'btn-success'}[$this.data().val])
-    $this.removeClass('btn-default');
+    // Reset siblings to outline variants
+    $this.siblings('button').removeClass('btn-success btn-warning btn-danger')
+        .each(function(){
+            var val = $(this).data().val;
+            $(this).addClass({'0':'btn-outline-danger', '1':'btn-outline-warning', '2': 'btn-outline-success'}[val]);
+        });
+    // Set clicked button to solid variant
+    var val = $this.data().val;
+    $this.removeClass('btn-outline-success btn-outline-warning btn-outline-danger');
+    $this.addClass({'0':'btn-danger', '1':'btn-warning', '2': 'btn-success'}[val]);
     $('#save').attr('disabled', $('#vote-form input[value=-1]').length > 0);
     nominate_status()
 }
@@ -54,13 +61,13 @@ function nominate_click(){
     var $this=$(this),
         $inp = $(this).siblings('input');
     if($inp.val() == 0){
-        $this.text("Nominated for Special Consideration!")
+        $this.html("★ Nominated for Special Consideration")
         $inp.val(1);
-        $this.addClass("btn-success").removeClass("btn-default");
+        $this.addClass("btn-success").removeClass("btn-outline-secondary");
     }else{
         $this.text("Nominate for Special Consideration");
         $inp.val(0);
-        $this.addClass("btn-default").removeClass("btn-success")
+        $this.addClass("btn-outline-secondary").removeClass("btn-success")
     }
 }
 
