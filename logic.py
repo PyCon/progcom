@@ -37,11 +37,48 @@ def l(key, **data):
 """
 Some DB wrapper stuff
 """
-# SQLAlchemy 2.0 requires 'postgresql://' instead of 'postgres://'
-_database_url = os.environ['DATABASE_URL']
-if _database_url.startswith('postgres://'):
-    _database_url = _database_url.replace('postgres://', 'postgresql://', 1)
-_e = create_engine(_database_url)
+
+
+def _create_db_engine():
+    """Create database engine with support for Cloud SQL Unix sockets.
+
+    For Cloud Run with Cloud SQL, set these environment variables:
+        - INSTANCE_UNIX_SOCKET: Unix socket path (e.g., /cloudsql/project:region:instance)
+        - DB_USER: Database username
+        - DB_PASS: Database password
+        - DB_NAME: Database name
+
+    For traditional connections, set:
+        - DATABASE_URL: Full connection string (e.g., postgresql://user:pass@host/db)
+    """
+    # Check if we should use Unix socket connection (Cloud Run + Cloud SQL)
+    unix_socket = os.environ.get('INSTANCE_UNIX_SOCKET')
+
+    if unix_socket:
+        # Unix socket connection for Cloud Run
+        from sqlalchemy.engine import URL
+        db_user = os.environ['DB_USER']
+        db_pass = os.environ['DB_PASS']
+        db_name = os.environ['DB_NAME']
+
+        connection_url = URL.create(
+            drivername='postgresql+psycopg2',
+            username=db_user,
+            password=db_pass,
+            database=db_name,
+            host=unix_socket,  # psycopg2 uses host for Unix socket path
+        )
+        return create_engine(connection_url)
+    else:
+        # Traditional DATABASE_URL connection
+        database_url = os.environ['DATABASE_URL']
+        # SQLAlchemy 2.0 requires 'postgresql://' instead of 'postgres://'
+        if database_url.startswith('postgres://'):
+            database_url = database_url.replace('postgres://', 'postgresql://', 1)
+        return create_engine(database_url)
+
+
+_e = _create_db_engine()
 
 __TUPLE_CACHE = {}
 def build_tuple(keys):
@@ -747,8 +784,8 @@ def mark_batch_read(batch, user):
 Discussion
 """
 _USER_FB_ITSD = itsdangerous.URLSafeSerializer(os.environ['ITSD_KEY'])
-_EMAIL_FROM = "pycon-program-committee@python.org"
-_WEB_HOST = "progcom2.philippe.gg"
+_EMAIL_FROM = os.environ['EMAIL_FROM']
+_WEB_HOST = os.environ['WEB_HOST']
 
 # SMTP Configuration (AWS SES compatible)
 _SMTP_HOST = os.environ.get('SMTP_HOST', 'email-smtp.us-east-1.amazonaws.com')
